@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FORE!FEIT — The Golf Card Game</title>
-  <link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -252,6 +252,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 2rem;
       margin-top: 2rem;
+      max-width: 600px;
     }
 
     .card-column label {
@@ -315,41 +316,41 @@
       border: 1px solid #ddd;
     }
 
-    .card-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
+    .card-body { padding: 0.6rem; flex: 1; display: flex; flex-direction: column; }
 
     .card-trigger {
-      font-size: 0.65rem;
+      font-size: 0.55rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
       font-weight: 600;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.15rem;
       color: var(--green);
     }
     .card-name {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       line-height: 1;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
     .consequence .card-name { color: var(--white); }
     .reward .card-name { color: var(--black); }
 
     .card-desc {
-      font-size: 0.78rem;
-      line-height: 1.5;
+      font-size: 0.65rem;
+      line-height: 1.4;
       flex: 1;
     }
     .consequence .card-desc { color: var(--text-muted); }
     .reward .card-desc { color: #555; }
 
     .card-default {
-      margin-top: 0.75rem;
-      padding-top: 0.75rem;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
       border-top: 1px solid;
-      font-size: 0.72rem;
+      font-size: 0.6rem;
       display: flex;
       align-items: flex-start;
-      gap: 0.4rem;
+      gap: 0.3rem;
       font-weight: 500;
     }
     .consequence .card-default { border-color: var(--grey-mid); color: var(--text-muted); }
