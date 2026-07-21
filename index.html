@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FORE!FEIT — The Golf Card Game</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -222,7 +222,7 @@
     /* PORTRAIT CARD GRID */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
     }
     .cards-grid.hidden { display: none; }
@@ -246,6 +246,50 @@
       color: var(--black);
     }
 
+    /* CARD SELECTOR LAYOUT */
+    .card-selector-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .card-column label {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .consequence-col label { color: var(--text-muted); }
+    .reward-col label { color: var(--green); }
+
+    .card-select {
+      width: 100%;
+      padding: 0.6rem 2rem 0.6rem 0.9rem;
+      border-radius: 3px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      margin-bottom: 1.25rem;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.9rem center;
+    }
+    .consequence-col .card-select {
+      background-color: var(--grey);
+      border: 1px solid var(--grey-mid);
+      color: var(--white);
+    }
+    .reward-col .card-select {
+      background-color: var(--white);
+      border: 1px solid #ccc;
+      color: var(--black);
+    }
+
     /* PORTRAIT image: 2:3 ratio */
     .card-image {
       width: 100%;
@@ -254,6 +298,21 @@
       object-position: center top;
       display: block;
       background: transparent;
+    }
+
+    .card-item {
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-item.consequence {
+      background: var(--grey);
+      border: 1px solid var(--grey-mid);
+    }
+    .card-item.reward {
+      background: var(--white);
+      border: 1px solid #ddd;
     }
 
     .card-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
@@ -394,7 +453,7 @@
       .nav-links a { font-size: 0.75rem; }
       section { padding: 3.5rem 4%; }
       .hero { min-height: 80vh; }
-      .cards-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      .card-selector-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -457,137 +516,34 @@
     <h2 class="section-title">Know Your Cards.</h2>
     <p class="section-body">Six consequence cards, six reward cards. Each comes with a default effect — swap in your own before the round starts.</p>
 
-    <div class="card-tabs">
-      <button class="tab-btn active-consequence" onclick="showTab('consequence', this)">⚫ Consequences</button>
-      <button class="tab-btn" onclick="showTab('reward', this)">⚪ Rewards</button>
-    </div>
+    <div class="card-selector-row">
 
-    <!-- CONSEQUENCE CARDS -->
-    <div class="cards-grid" id="consequence-grid">
-
-      <div class="card-item consequence">
-        <img class="card-image" src="images/bunker-buster.png" alt="Bunker Buster card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">Ball lands in a bunker</p>
-          <h3 class="card-name">Bunker Buster</h3>
-          <p class="card-desc">Your sand trap becomes your identity. Carry this card and everyone knows you found the beach.</p>
-          <div class="card-default">🎯 Default: <strong>Only one club</strong> for the entire hole.</div>
-        </div>
+      <!-- CONSEQUENCE COLUMN -->
+      <div class="card-column consequence-col">
+        <label>⚫ Consequence</label>
+        <select class="card-select" onchange="showCard('consequence', this.value)">
+          <option value="bunker-buster">Bunker Buster</option>
+          <option value="fence-hopper">Fence Hopper</option>
+          <option value="splash-zone">Splash Zone</option>
+          <option value="bush-whacker">Bush Whacker</option>
+          <option value="tree-hugger">Tree Hugger</option>
+          <option value="the-houdini">The Houdini</option>
+        </select>
+        <div id="consequence-display"></div>
       </div>
 
-      <div class="card-item consequence">
-        <img class="card-image" src="images/fence-hopper.png" alt="Fence Hopper card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">Ball goes out of bounds</p>
-          <h3 class="card-name">Fence Hopper</h3>
-          <p class="card-desc">Your ball went for a walk. Now it's going to cost you.</p>
-          <div class="card-default">🎯 Default: <strong>+1 stroke</strong> added to your hole score.</div>
-        </div>
-      </div>
-
-      <div class="card-item consequence">
-        <img class="card-image" src="images/splash-zone.png" alt="Splash Zone card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">Ball lands in water</p>
-          <h3 class="card-name">Splash Zone</h3>
-          <p class="card-desc">You found the water. Now the group gets to find your ball for you.</p>
-          <div class="card-default">🎯 Default: <strong>Group throws your ball</strong> at any point during the hole.</div>
-        </div>
-      </div>
-
-      <div class="card-item consequence">
-        <img class="card-image" src="images/bush-whacker.png" alt="Bush Whacker card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">Ball lands in rough or bush</p>
-          <h3 class="card-name">Bush Whacker</h3>
-          <p class="card-desc">You went exploring. Now play with what you've got — just not the putter.</p>
-          <div class="card-default">🎯 Default: <strong>Anything but a putter</strong> for the entire hole.</div>
-        </div>
-      </div>
-
-      <div class="card-item consequence">
-        <img class="card-image" src="images/tree-hugger.png" alt="Tree Hugger card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">Ball hits a tree</p>
-          <h3 class="card-name">Tree Hugger</h3>
-          <p class="card-desc">The fairway was right there. Instead, you hugged a tree.</p>
-          <div class="card-default">🎯 Default: <strong>Blind tee shot</strong> — no looking before you swing.</div>
-        </div>
-      </div>
-
-      <div class="card-item consequence">
-        <img class="card-image" src="images/the-houdini.png" alt="The Houdini card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">Ball is lost</p>
-          <h3 class="card-name">The Houdini</h3>
-          <p class="card-desc">Your ball vanished. Now your best shot will too.</p>
-          <div class="card-default">🎯 Default: <strong>Reverse mulligan</strong> — the group picks your worst shot to replay.</div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- REWARD CARDS -->
-    <div class="cards-grid hidden" id="reward-grid">
-
-      <div class="card-item reward">
-        <img class="card-image" src="images/par-fection.png" alt="Par Fection card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">Makes par</p>
-          <h3 class="card-name">Par Fection</h3>
-          <p class="card-desc">Solid, consistent, reliable. Par is the foundation — now build on it.</p>
-          <div class="card-default">🎯 Default: <strong>Fix lie</strong> — improve your ball position once during the hole.</div>
-        </div>
-      </div>
-
-      <div class="card-item reward">
-        <img class="card-image" src="images/chip-n-dip.png" alt="Chip n Dip card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">Chips in from off the green</p>
-          <h3 class="card-name">Chip 'n Dip</h3>
-          <p class="card-desc">You skipped the green and went straight to the bottom of the cup.</p>
-          <div class="card-default">🎯 Default: <strong>Gimme Gimme</strong> — putts within a club length count as holed.</div>
-        </div>
-      </div>
-
-      <div class="card-item reward">
-        <img class="card-image" src="images/eager-eagle.png" alt="Eager Eagle card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">Makes eagle</p>
-          <h3 class="card-name">Eager Eagle</h3>
-          <p class="card-desc">Two under. You earned the best reward in the bag.</p>
-          <div class="card-default">🎯 Default: <strong>Relief anywhere</strong> — drop your ball wherever you like, no penalty.</div>
-        </div>
-      </div>
-
-      <div class="card-item reward">
-        <img class="card-image" src="images/early-bird.png" alt="Early Bird card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">First to finish a hole</p>
-          <h3 class="card-name">Early Bird</h3>
-          <p class="card-desc">Speed and efficiency rewarded. First one in earns the advantage.</p>
-          <div class="card-default">🎯 Default: <strong>Play from front tees</strong> on the next hole.</div>
-        </div>
-      </div>
-
-      <div class="card-item reward">
-        <img class="card-image" src="images/pin-seeker.png" alt="Pin Seeker card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">Ball lands within a club length of the pin</p>
-          <h3 class="card-name">Pin Seeker</h3>
-          <p class="card-desc">Dead on target. That's the kind of shot that wins rounds.</p>
-          <div class="card-default">🎯 Default: <strong>-1 stroke</strong> deducted from your hole score.</div>
-        </div>
-      </div>
-
-      <div class="card-item reward">
-        <img class="card-image" src="images/go-long.png" alt="Go Long card" onerror="this.style.display='none'" />
-        <div class="card-body">
-          <p class="card-trigger">Longest drive on the hole</p>
-          <h3 class="card-name">Go Long</h3>
-          <p class="card-desc">Big hitter, big reward. The longest ball off the tee earns the edge next hole.</p>
-          <div class="card-default">🎯 Default: <strong>Start from best tee off</strong> — use the group's best tee shot position.</div>
-        </div>
+      <!-- REWARD COLUMN -->
+      <div class="card-column reward-col">
+        <label>⚪ Reward</label>
+        <select class="card-select" onchange="showCard('reward', this.value)">
+          <option value="par-fection">Par Fection</option>
+          <option value="chip-n-dip">Chip 'n Dip</option>
+          <option value="eager-eagle">Eager Eagle</option>
+          <option value="early-bird">Early Bird</option>
+          <option value="pin-seeker">Pin Seeker</option>
+          <option value="go-long">Go Long</option>
+        </select>
+        <div id="reward-display"></div>
       </div>
 
     </div>
@@ -683,20 +639,42 @@
   </footer>
 
   <script>
-    function showTab(type, btn) {
-      const consequenceGrid = document.getElementById('consequence-grid');
-      const rewardGrid = document.getElementById('reward-grid');
-      const tabs = document.querySelectorAll('.tab-btn');
-      tabs.forEach(t => t.classList.remove('active-consequence', 'active-reward'));
-      if (type === 'consequence') {
-        consequenceGrid.classList.remove('hidden');
-        rewardGrid.classList.add('hidden');
-        btn.classList.add('active-consequence');
-      } else {
-        rewardGrid.classList.remove('hidden');
-        consequenceGrid.classList.add('hidden');
-        btn.classList.add('active-reward');
+    const cards = {
+      consequence: {
+        'bunker-buster': { name: 'Bunker Buster', trigger: 'Ball lands in a bunker', desc: 'Your sand trap becomes your identity. Carry this card and everyone knows you found the beach.', effect: 'Only one club for the entire hole.' },
+        'fence-hopper': { name: 'Fence Hopper', trigger: 'Ball goes out of bounds', desc: "Your ball went for a walk. Now it's going to cost you.", effect: '+1 stroke added to your hole score.' },
+        'splash-zone': { name: 'Splash Zone', trigger: 'Ball lands in water', desc: 'You found the water. Now the group gets to find your ball for you.', effect: 'Group throws your ball at any point during the hole.' },
+        'bush-whacker': { name: 'Bush Whacker', trigger: 'Ball lands in rough or bush', desc: "You went exploring. Now play with what you've got — just not the putter.", effect: 'Anything but a putter for the entire hole.' },
+        'tree-hugger': { name: 'Tree Hugger', trigger: 'Ball hits a tree', desc: 'The fairway was right there. Instead, you hugged a tree.', effect: 'Blind tee shot — no looking before you swing.' },
+        'the-houdini': { name: 'The Houdini', trigger: 'Ball is lost', desc: 'Your ball vanished. Now your best shot will too.', effect: 'Reverse mulligan — the group picks your worst shot to replay.' }
+      },
+      reward: {
+        'par-fection': { name: 'Par Fection', trigger: 'Makes par', desc: 'Solid, consistent, reliable. Par is the foundation — now build on it.', effect: 'Fix lie — improve your ball position once during the hole.' },
+        'chip-n-dip': { name: "Chip 'n Dip", trigger: 'Chips in from off the green', desc: 'You skipped the green and went straight to the bottom of the cup.', effect: 'Gimme Gimme — putts within a club length count as holed.' },
+        'eager-eagle': { name: 'Eager Eagle', trigger: 'Makes eagle', desc: 'Two under. You earned the best reward in the bag.', effect: 'Relief anywhere — drop your ball wherever you like, no penalty.' },
+        'early-bird': { name: 'Early Bird', trigger: 'First to finish a hole', desc: 'Speed and efficiency rewarded. First one in earns the advantage.', effect: 'Play from front tees on the next hole.' },
+        'pin-seeker': { name: 'Pin Seeker', trigger: 'Ball lands within a club length of the pin', desc: "Dead on target. That's the kind of shot that wins rounds.", effect: '-1 stroke deducted from your hole score.' },
+        'go-long': { name: 'Go Long', trigger: 'Longest drive on the hole', desc: 'Big hitter, big reward. The longest ball off the tee earns the edge next hole.', effect: "Start from best tee off — use the group's best tee shot position." }
       }
+    };
+
+    function renderCard(type, key) {
+      const c = cards[type][key];
+      const isReward = type === 'reward';
+      return `
+        <div class="card-item ${type}">
+          <img class="card-image" src="images/${key}.png" alt="${c.name}" onerror="this.style.display='none'" />
+          <div class="card-body">
+            <p class="card-trigger">${c.trigger}</p>
+            <h3 class="card-name">${c.name}</h3>
+            <p class="card-desc">${c.desc}</p>
+            <div class="card-default">🎯 Default: <strong>${c.effect}</strong></div>
+          </div>
+        </div>`;
+    }
+
+    function showCard(type, key) {
+      document.getElementById(`${type}-display`).innerHTML = renderCard(type, key);
     }
 
     function toggleFaq(btn) {
@@ -709,6 +687,10 @@
         btn.classList.add('open');
       }
     }
+
+    // Init both cards on load
+    showCard('consequence', 'bunker-buster');
+    showCard('reward', 'par-fection');
   </script>
 
 </body>
