@@ -77,19 +77,10 @@
       justify-content: center;
       text-align: center;
       padding: 4rem 5%;
-      background: radial-gradient(ellipse at 50% 60%, #1a3d20 0%, var(--black) 70%);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.7) 100%),
+                  url('images/hero-bg.jpg') center center / cover no-repeat;
       position: relative;
       overflow: hidden;
-    }
-    .hero::before {
-      content: '⛳';
-      position: absolute;
-      font-size: 28rem;
-      opacity: 0.04;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
     }
     .hero-eyebrow {
       font-size: 0.75rem;
@@ -188,7 +179,7 @@
     .step p { font-size: 0.875rem; color: var(--text-muted); }
 
     /* CARDS SECTION */
-    #cards { background: var(--black); }
+    #cards { background: #1a1a1a; }
 
     .card-tabs {
       display: flex;
@@ -246,59 +237,56 @@
       color: var(--black);
     }
 
-    /* CARD SELECTOR LAYOUT */
-    .card-selector-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+    /* CAROUSEL */
+    .carousel-wrap {
       margin-top: 2rem;
-      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
     }
 
-    .card-column label {
-      display: block;
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
+    .carousel-counter {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+      color: var(--text-muted);
     }
-    .consequence-col label { color: var(--text-muted); }
-    .reward-col label { color: var(--green); }
 
-    .card-select {
-      width: 100%;
-      padding: 0.6rem 2rem 0.6rem 0.9rem;
-      border-radius: 3px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      font-family: 'Inter', sans-serif;
-      cursor: pointer;
-      margin-bottom: 1.25rem;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.9rem center;
+    .carousel-counter .type-label {
+      font-weight: 700;
     }
-    .consequence-col .card-select {
-      background-color: var(--grey);
+    .carousel-counter .type-label.consequence { color: var(--white); }
+    .carousel-counter .type-label.reward { color: var(--green); }
+
+    .carousel-stage {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .carousel-arrow {
+      background: var(--grey);
       border: 1px solid var(--grey-mid);
       color: var(--white);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
     }
-    .reward-col .card-select {
-      background-color: var(--white);
-      border: 1px solid #ccc;
-      color: var(--black);
-    }
+    .carousel-arrow:hover { border-color: var(--green); color: var(--green); }
 
-    /* PORTRAIT image: 2:3 ratio */
-    .card-image {
-      width: 100%;
-      aspect-ratio: 2 / 3;
-      object-fit: contain;
-      object-position: center top;
-      display: block;
-      background: transparent;
+    .carousel-card-wrap {
+      flex: 1;
+      overflow: hidden;
     }
 
     .card-item {
@@ -306,14 +294,25 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      transition: opacity 0.25s ease;
     }
+
     .card-item.consequence {
       background: var(--grey);
-      border: 1px solid var(--grey-mid);
+      border: 1px solid #444;
     }
     .card-item.reward {
       background: var(--white);
       border: 1px solid #ddd;
+    }
+
+    .card-image {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      object-fit: contain;
+      object-position: center top;
+      display: block;
+      background: transparent;
     }
 
     .card-body { padding: 0.6rem; flex: 1; display: flex; flex-direction: column; }
@@ -356,6 +355,22 @@
     .consequence .card-default { border-color: var(--grey-mid); color: var(--text-muted); }
     .reward .card-default { border-color: #ddd; color: #777; }
     .card-default strong { color: var(--green); }
+
+    .carousel-dots {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--grey-mid);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .dot.active { background: var(--green); }
+    .dot.reward-dot.active { background: var(--white); }
 
     /* FAQ */
     #faq { background: var(--grey); }
@@ -454,7 +469,8 @@
       .nav-links a { font-size: 0.75rem; }
       section { padding: 3.5rem 4%; }
       .hero { min-height: 80vh; }
-      .card-selector-row { grid-template-columns: 1fr; }
+      .carousel-stage { max-width: 300px; }
+      .carousel-arrow { width: 32px; height: 32px; font-size: 0.9rem; }
     }
   </style>
 </head>
@@ -462,11 +478,8 @@
 
   <!-- NAV -->
   <nav>
-    <a href="#" class="nav-logo">FORE<span>!</span>FEIT</a>
+    <a href="#" class="nav-logo">FOREFEIT</a>
     <ul class="nav-links">
-      <li><a href="#how-to-play">How to Play</a></li>
-      <li><a href="#cards">Cards</a></li>
-      <li><a href="#faq">FAQ</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
@@ -474,19 +487,15 @@
   <!-- HERO -->
   <section class="hero">
     <p class="hero-eyebrow">The Golf Card Game</p>
-    <h1>FORE<span class="exclaim">!</span>FEIT</h1>
+    <h1>FOREFEIT</h1>
     <p class="hero-sub">Play it during your round. Every bad shot — or brilliant one — earns a card. <strong>Carry it into the next hole and face what comes with it.</strong></p>
-    <div class="hero-cta">
-      <a href="#how-to-play" class="btn btn-green">How to Play</a>
-      <a href="#cards" class="btn btn-outline">View Cards</a>
-    </div>
   </section>
 
   <!-- HOW TO PLAY -->
   <section id="how-to-play">
     <p class="section-label">How to Play</p>
     <h2 class="section-title">Simple Rules.<br>Serious Bragging Rights.</h2>
-    <p class="section-body">FORE!FEIT drops into any round with any group. Pick your cards, play your game, and let the chaos unfold.</p>
+    <p class="section-body">FOREFEIT drops into any round with any group. Pick your cards, play your game, and let the chaos unfold.</p>
     <div class="steps">
       <div class="step">
         <div class="step-num">01</div>
@@ -517,36 +526,17 @@
     <h2 class="section-title">Know Your Cards.</h2>
     <p class="section-body">Six consequence cards, six reward cards. Each comes with a default effect — swap in your own before the round starts.</p>
 
-    <div class="card-selector-row">
-
-      <!-- CONSEQUENCE COLUMN -->
-      <div class="card-column consequence-col">
-        <label>⚫ Consequence</label>
-        <select class="card-select" onchange="showCard('consequence', this.value)">
-          <option value="bunker-buster">Bunker Buster</option>
-          <option value="fence-hopper">Fence Hopper</option>
-          <option value="splash-zone">Splash Zone</option>
-          <option value="bush-whacker">Bush Whacker</option>
-          <option value="tree-hugger">Tree Hugger</option>
-          <option value="the-houdini">The Houdini</option>
-        </select>
-        <div id="consequence-display"></div>
+    <div class="carousel-wrap">
+      <div class="carousel-counter">
+        Card <span id="carousel-current">1</span> of 12 —
+        <span id="carousel-type-label" class="type-label consequence">Consequence</span>
       </div>
-
-      <!-- REWARD COLUMN -->
-      <div class="card-column reward-col">
-        <label>⚪ Reward</label>
-        <select class="card-select" onchange="showCard('reward', this.value)">
-          <option value="par-fection">Par Fection</option>
-          <option value="chip-n-dip">Chip 'n Dip</option>
-          <option value="eager-eagle">Eager Eagle</option>
-          <option value="early-bird">Early Bird</option>
-          <option value="pin-seeker">Pin Seeker</option>
-          <option value="go-long">Go Long</option>
-        </select>
-        <div id="reward-display"></div>
+      <div class="carousel-stage">
+        <button class="carousel-arrow" onclick="carouselMove(-1)">&#8592;</button>
+        <div class="carousel-card-wrap" id="carousel-card"></div>
+        <button class="carousel-arrow" onclick="carouselMove(1)">&#8594;</button>
       </div>
-
+      <div class="carousel-dots" id="carousel-dots"></div>
     </div>
   </section>
 
@@ -634,48 +624,61 @@
 
   <!-- FOOTER -->
   <footer>
-    <span class="footer-logo">FORE<span>!</span>FEIT</span>
+    <span class="footer-logo">FOREFEIT</span>
     <p>© 2025 FORE!FEIT. All rights reserved.</p>
     <p>forefeit.co.za</p>
   </footer>
 
   <script>
-    const cards = {
-      consequence: {
-        'bunker-buster': { name: 'Bunker Buster', trigger: 'Ball lands in a bunker', desc: 'Your sand trap becomes your identity. Carry this card and everyone knows you found the beach.', effect: 'Only one club for the entire hole.' },
-        'fence-hopper': { name: 'Fence Hopper', trigger: 'Ball goes out of bounds', desc: "Your ball went for a walk. Now it's going to cost you.", effect: '+1 stroke added to your hole score.' },
-        'splash-zone': { name: 'Splash Zone', trigger: 'Ball lands in water', desc: 'You found the water. Now the group gets to find your ball for you.', effect: 'Group throws your ball at any point during the hole.' },
-        'bush-whacker': { name: 'Bush Whacker', trigger: 'Ball lands in rough or bush', desc: "You went exploring. Now play with what you've got — just not the putter.", effect: 'Anything but a putter for the entire hole.' },
-        'tree-hugger': { name: 'Tree Hugger', trigger: 'Ball hits a tree', desc: 'The fairway was right there. Instead, you hugged a tree.', effect: 'Blind tee shot — no looking before you swing.' },
-        'the-houdini': { name: 'The Houdini', trigger: 'Ball is lost', desc: 'Your ball vanished. Now your best shot will too.', effect: 'Reverse mulligan — the group picks your worst shot to replay.' }
-      },
-      reward: {
-        'par-fection': { name: 'Par Fection', trigger: 'Makes par', desc: 'Solid, consistent, reliable. Par is the foundation — now build on it.', effect: 'Fix lie — improve your ball position once during the hole.' },
-        'chip-n-dip': { name: "Chip 'n Dip", trigger: 'Chips in from off the green', desc: 'You skipped the green and went straight to the bottom of the cup.', effect: 'Gimme Gimme — putts within a club length count as holed.' },
-        'eager-eagle': { name: 'Eager Eagle', trigger: 'Makes eagle', desc: 'Two under. You earned the best reward in the bag.', effect: 'Relief anywhere — drop your ball wherever you like, no penalty.' },
-        'early-bird': { name: 'Early Bird', trigger: 'First to finish a hole', desc: 'Speed and efficiency rewarded. First one in earns the advantage.', effect: 'Play from front tees on the next hole.' },
-        'pin-seeker': { name: 'Pin Seeker', trigger: 'Ball lands within a club length of the pin', desc: "Dead on target. That's the kind of shot that wins rounds.", effect: '-1 stroke deducted from your hole score.' },
-        'go-long': { name: 'Go Long', trigger: 'Longest drive on the hole', desc: 'Big hitter, big reward. The longest ball off the tee earns the edge next hole.', effect: "Start from best tee off — use the group's best tee shot position." }
-      }
-    };
+    const allCards = [
+      { type: 'consequence', key: 'bunker-buster', name: 'Bunker Buster', trigger: 'Ball lands in a bunker', desc: 'Awarded when your ball finds the sand. Any bunker on the hole counts.' },
+      { type: 'consequence', key: 'fence-hopper', name: 'Fence Hopper', trigger: 'Ball goes out of bounds', desc: 'Awarded when your ball crosses the boundary and goes out of play.' },
+      { type: 'consequence', key: 'splash-zone', name: 'Splash Zone', trigger: 'Ball lands in water', desc: 'Awarded when your ball finds any water hazard — dam, stream, or pond.' },
+      { type: 'consequence', key: 'bush-whacker', name: 'Bush Whacker', trigger: 'Ball lands in rough or bush', desc: 'Awarded when your ball ends up in the rough, thick grass, or bush.' },
+      { type: 'consequence', key: 'tree-hugger', name: 'Tree Hugger', trigger: 'Ball strikes a tree', desc: 'Awarded when your ball makes contact with any tree during the hole.' },
+      { type: 'consequence', key: 'the-houdini', name: 'The Houdini', trigger: 'Ball cannot be found', desc: 'Awarded when your ball is declared lost and cannot be located.' },
+      { type: 'reward', key: 'par-fection', name: 'Par Fection', trigger: 'Player makes par', desc: 'Awarded when you complete a hole in exactly the number of strokes expected.' },
+      { type: 'reward', key: 'chip-n-dip', name: "Chip 'n Dip", trigger: 'Ball chips into the hole', desc: 'Awarded when you chip from off the green and the ball goes directly into the cup.' },
+      { type: 'reward', key: 'eager-eagle', name: 'Eager Eagle', trigger: 'Player makes eagle', desc: 'Awarded when you complete a hole two strokes under par.' },
+      { type: 'reward', key: 'early-bird', name: 'Early Bird', trigger: 'First player to finish the hole', desc: 'Awarded to whichever player holes out before anyone else in the group.' },
+      { type: 'reward', key: 'pin-seeker', name: 'Pin Seeker', trigger: 'Ball lands within a club length of the pin', desc: 'Awarded when your approach shot finishes within one club length of the flagstick.' },
+      { type: 'reward', key: 'go-long', name: 'Go Long', trigger: 'Longest drive in the group', desc: 'Awarded to the player with the longest tee shot on any given hole.' }
+    ];
 
-    function renderCard(type, key) {
-      const c = cards[type][key];
-      const isReward = type === 'reward';
-      return `
-        <div class="card-item ${type}">
-          <img class="card-image" src="images/${key}.png" alt="${c.name}" onerror="this.style.display='none'" />
+    let currentIndex = 0;
+
+    function renderCarousel(index) {
+      const c = allCards[index];
+
+      document.getElementById('carousel-card').innerHTML = `
+        <div class="card-item ${c.type}">
+          <img class="card-image" src="images/${c.key}.png" alt="${c.name}" onerror="this.style.display='none'" />
           <div class="card-body">
             <p class="card-trigger">${c.trigger}</p>
             <h3 class="card-name">${c.name}</h3>
             <p class="card-desc">${c.desc}</p>
-            <div class="card-default">🎯 Default: <strong>${c.effect}</strong></div>
           </div>
         </div>`;
+
+      document.getElementById('carousel-current').textContent = index + 1;
+      const typeLabel = document.getElementById('carousel-type-label');
+      typeLabel.textContent = c.type === 'reward' ? 'Reward' : 'Consequence';
+      typeLabel.className = `type-label ${c.type}`;
+
+      const dotsEl = document.getElementById('carousel-dots');
+      dotsEl.innerHTML = allCards.map((card, i) =>
+        `<div class="dot ${card.type === 'reward' ? 'reward-dot' : ''} ${i === index ? 'active' : ''}" onclick="goToCard(${i})"></div>`
+      ).join('');
     }
 
-    function showCard(type, key) {
-      document.getElementById(`${type}-display`).innerHTML = renderCard(type, key);
+    function carouselMove(dir) {
+      currentIndex = (currentIndex + dir + allCards.length) % allCards.length;
+      renderCarousel(currentIndex);
+    }
+
+    function goToCard(index) {
+      currentIndex = index;
+      renderCarousel(index);
     }
 
     function toggleFaq(btn) {
@@ -689,9 +692,8 @@
       }
     }
 
-    // Init both cards on load
-    showCard('consequence', 'bunker-buster');
-    showCard('reward', 'par-fection');
+    // Init carousel
+    renderCarousel(0);
   </script>
 
 </body>
