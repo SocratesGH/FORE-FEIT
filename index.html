@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FORE!FEIT — The Golf Card Game</title>
+  <title>FOREFEIT — The Golf Card Game</title>
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
@@ -372,8 +372,128 @@
     .dot.active { background: var(--green); }
     .dot.reward-dot.active { background: var(--white); }
 
-    /* FAQ */
-    #faq { background: var(--grey); }
+    /* EFFECTS SECTION */
+    #effects { background: var(--black); }
+
+    .effect-item {
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      cursor: default;
+    }
+    .effect-item.consequence {
+      background: var(--grey);
+      border: 1px solid #444;
+    }
+    .effect-item.reward {
+      background: var(--white);
+      border: 1px solid #ddd;
+    }
+    .effect-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: 0.3rem; }
+    .effect-type {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .effect-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+    .consequence .effect-name { color: var(--white); }
+    .reward .effect-name { color: var(--black); }
+    .effect-desc {
+      font-size: 0.75rem;
+      line-height: 1.5;
+    }
+    .consequence .effect-desc { color: var(--text-muted); }
+    .reward .effect-desc { color: #555; }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      border-radius: 10px;
+      max-width: 400px;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .modal-box.consequence { background: var(--grey); border: 1px solid #444; }
+    .modal-box.reward { background: var(--white); border: 1px solid #ddd; }
+    .modal-img {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      object-fit: contain;
+      object-position: center top;
+      display: block;
+      background: transparent;
+    }
+    .modal-body { padding: 1.25rem; }
+    .modal-trigger {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 0.25rem;
+    }
+    .modal-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .modal-box.consequence .modal-name { color: var(--white); }
+    .modal-box.reward .modal-name { color: var(--black); }
+    .modal-detail {
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .modal-box.consequence .modal-detail { color: var(--text-muted); }
+    .modal-box.reward .modal-detail { color: #444; }
+    .modal-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: var(--white);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CARD clickable hint */
+    .card-item { cursor: pointer; }
+    .card-item:hover { transform: translateY(-3px); transition: transform 0.2s; }
+    .card-tap-hint {
+      font-size: 0.6rem;
+      text-align: center;
+      padding: 0.4rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .consequence .card-tap-hint { color: var(--text-muted); background: var(--grey); }
+    .reward .card-tap-hint { color: #aaa; background: var(--white); }
     .faq-list { margin-top: 2.5rem; max-width: 720px; }
     .faq-item { border-bottom: 1px solid var(--grey-mid); }
     .faq-q {
@@ -540,6 +660,38 @@
     </div>
   </section>
 
+  <!-- MODAL -->
+  <div class="modal-overlay" id="card-modal" onclick="closeModal(event)">
+    <div class="modal-box" id="modal-box">
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+      <img class="modal-img" id="modal-img" src="" alt="" onerror="this.style.display='none'" />
+      <div class="modal-body">
+        <p class="modal-trigger" id="modal-trigger"></p>
+        <h2 class="modal-name" id="modal-name"></h2>
+        <p class="modal-detail" id="modal-detail"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EFFECTS -->
+  <section id="effects">
+    <p class="section-label">Consequences & Rewards</p>
+    <h2 class="section-title">What's at Stake.</h2>
+    <p class="section-body">Each card you carry applies one of these effects for the entire hole. Mix and match before your round.</p>
+    <div class="carousel-wrap" style="margin-top:2rem;">
+      <div class="carousel-counter">
+        Effect <span id="eff-current">1</span> of 12 —
+        <span id="eff-type-label" class="type-label consequence">Consequence</span>
+      </div>
+      <div class="carousel-stage">
+        <button class="carousel-arrow" onclick="effectMove(-1)">&#8592;</button>
+        <div class="carousel-card-wrap" id="effect-card"></div>
+        <button class="carousel-arrow" onclick="effectMove(1)">&#8594;</button>
+      </div>
+      <div class="carousel-dots" id="effect-dots"></div>
+    </div>
+  </section>
+
   <!-- FAQ -->
   <section id="faq">
     <p class="section-label">FAQ</p>
@@ -580,14 +732,6 @@
 
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
-          Do I have to use the default effect on each card?
-          <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-a">No. Each card comes with a suggested default, but you can swap in any consequence or reward before your round starts. Agree on the pairings as a group and play your way.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
           What if my course doesn't have a bunker or water?
           <span class="faq-icon">+</span>
         </button>
@@ -609,7 +753,7 @@
   <section id="contact">
     <p class="section-label">Get in Touch</p>
     <h2 class="section-title">We'd Love to Hear From You.</h2>
-    <p class="section-body">Questions, orders, or just want to share how your round went — reach out.</p>
+    <p class="section-body">Have any questions, orders, or just want to share how your round went — reach out.</p>
     <div class="contact-links">
       <a href="tel:0733195999" class="contact-link">
         <div class="contact-icon">📞</div>
@@ -625,75 +769,129 @@
   <!-- FOOTER -->
   <footer>
     <span class="footer-logo">FOREFEIT</span>
-    <p>© 2025 FORE!FEIT. All rights reserved.</p>
+    <p>© 2025 FOREFEIT. All rights reserved.</p>
     <p>forefeit.co.za</p>
   </footer>
 
   <script>
     const allCards = [
-      { type: 'consequence', key: 'bunker-buster', name: 'Bunker Buster', trigger: 'Ball lands in a bunker', desc: 'Awarded when your ball finds the sand. Any bunker on the hole counts.' },
-      { type: 'consequence', key: 'fence-hopper', name: 'Fence Hopper', trigger: 'Ball goes out of bounds', desc: 'Awarded when your ball crosses the boundary and goes out of play.' },
-      { type: 'consequence', key: 'splash-zone', name: 'Splash Zone', trigger: 'Ball lands in water', desc: 'Awarded when your ball finds any water hazard — dam, stream, or pond.' },
-      { type: 'consequence', key: 'bush-whacker', name: 'Bush Whacker', trigger: 'Ball lands in rough or bush', desc: 'Awarded when your ball ends up in the rough, thick grass, or bush.' },
-      { type: 'consequence', key: 'tree-hugger', name: 'Tree Hugger', trigger: 'Ball strikes a tree', desc: 'Awarded when your ball makes contact with any tree during the hole.' },
-      { type: 'consequence', key: 'the-houdini', name: 'The Houdini', trigger: 'Ball cannot be found', desc: 'Awarded when your ball is declared lost and cannot be located.' },
-      { type: 'reward', key: 'par-fection', name: 'Par Fection', trigger: 'Player makes par', desc: 'Awarded when you complete a hole in exactly the number of strokes expected.' },
-      { type: 'reward', key: 'chip-n-dip', name: "Chip 'n Dip", trigger: 'Ball chips into the hole', desc: 'Awarded when you chip from off the green and the ball goes directly into the cup.' },
-      { type: 'reward', key: 'eager-eagle', name: 'Eager Eagle', trigger: 'Player makes eagle', desc: 'Awarded when you complete a hole two strokes under par.' },
-      { type: 'reward', key: 'early-bird', name: 'Early Bird', trigger: 'First player to finish the hole', desc: 'Awarded to whichever player holes out before anyone else in the group.' },
-      { type: 'reward', key: 'pin-seeker', name: 'Pin Seeker', trigger: 'Ball lands within a club length of the pin', desc: 'Awarded when your approach shot finishes within one club length of the flagstick.' },
-      { type: 'reward', key: 'go-long', name: 'Go Long', trigger: 'Longest drive in the group', desc: 'Awarded to the player with the longest tee shot on any given hole.' }
+      { type: 'consequence', key: 'bunker-buster', name: 'Bunker Buster', trigger: 'Ball lands in a bunker', detail: "Awarded when your ball finds any sand bunker during the hole. Whether it's a greenside or fairway bunker, if your ball settles in the sand, this card is yours. You carry it into the next hole." },
+      { type: 'consequence', key: 'fence-hopper', name: 'Fence Hopper', trigger: 'Ball goes out of bounds', detail: 'Awarded when your ball crosses the boundary markers and is declared out of bounds. Standard OB rules still apply — this card adds an extra layer on top for the following hole.' },
+      { type: 'consequence', key: 'splash-zone', name: 'Splash Zone', trigger: 'Ball lands in water', detail: 'Awarded when your ball finds any water hazard — dam, stream, pond, or drainage ditch. Take your drop as normal, but carry this card into the next hole.' },
+      { type: 'consequence', key: 'bush-whacker', name: 'Bush Whacker', trigger: 'Ball lands in rough or bush', detail: "Awarded when your ball ends up in the rough, thick grass, or any bush. If you have to hack it out sideways, this card is probably yours." },
+      { type: 'consequence', key: 'tree-hugger', name: 'Tree Hugger', trigger: 'Ball strikes a tree', detail: "Awarded when your ball makes audible contact with any tree during the hole. If the group hears the knock, you're carrying this card into the next hole." },
+      { type: 'consequence', key: 'the-houdini', name: 'The Houdini', trigger: 'Ball cannot be found', detail: 'Awarded when your ball is declared lost after the search period. If it vanished without a trace, this card finds you instead. Play a provisional and carry this into the next hole.' },
+      { type: 'reward', key: 'par-fection', name: 'Par Fection', trigger: 'Player makes par', detail: 'Awarded when you complete a hole in exactly the number of strokes expected — no more, no less. Consistent, solid golf deserves a reward. Carry this into the next hole and enjoy the benefit.' },
+      { type: 'reward', key: 'chip-n-dip', name: "Chip 'n Dip", trigger: 'Ball chips into the hole', detail: 'Awarded when you chip from off the green and the ball goes directly into the cup without putting. One of the most satisfying moments in golf — and now it pays off on the next hole too.' },
+      { type: 'reward', key: 'eager-eagle', name: 'Eager Eagle', trigger: 'Player makes eagle', detail: 'Awarded when you complete a hole two strokes under par. An exceptional score deserves an exceptional reward. Carry this into the following hole and let the group feel your dominance.' },
+      { type: 'reward', key: 'early-bird', name: 'Early Bird', trigger: 'First player to finish the hole', detail: 'Awarded to whichever player holes out before anyone else in the group. Reward for clean, decisive play and good pace. First one in earns the advantage heading into the next hole.' },
+      { type: 'reward', key: 'pin-seeker', name: 'Pin Seeker', trigger: 'Ball lands within a club length of the pin', detail: 'Awarded when your approach shot finishes within one club length of the flagstick. The group measures after the shot. Dead on target earns you this card and its reward on the next hole.' },
+      { type: 'reward', key: 'go-long', name: 'Go Long', trigger: 'Longest drive in the group', detail: 'Awarded to the player with the longest tee shot on any given hole. The ball must be in bounds to qualify. Big hitters rejoice — distance finally has its own reward.' }
     ];
 
-    let currentIndex = 0;
+    const allEffects = [
+      { type: 'consequence', name: 'Club Confiscation', desc: "The group chooses one club to remove from your bag for the entire hole. Choose wisely — or don't, because you don't get to choose." },
+      { type: 'consequence', name: "Group's Choice", desc: 'The group selects your club for every shot on the hole. Each club can only be used once — until all options are exhausted.' },
+      { type: 'consequence', name: 'Reverse Mulligan', desc: "Once per hole, at the group's discretion, they can force you to replay your best shot with your worst result counting instead." },
+      { type: 'consequence', name: 'Blind Tee Shot', desc: 'You may line up your tee shot as normal, but must be blindfolded when you swing. The group ensures fair setup.' },
+      { type: 'consequence', name: '+1 Stroke', desc: 'A penalty stroke is added to your score for the hole you carry this card into. Simple, painful, effective.' },
+      { type: 'consequence', name: 'Group Distraction', desc: 'The group is permitted to distract you during any of your shots on the hole. Within reason — no physical interference.' },
+      { type: 'reward', name: 'Tee Shot Mulligan', desc: 'You may retake your tee shot once on the hole you carry this card into. Only applies to the tee shot — choose your moment wisely.' },
+      { type: 'reward', name: 'Front Tees', desc: 'You play your tee shot from the front tees on the hole you carry this card into. A shorter hole, a better angle.' },
+      { type: 'reward', name: '-1 Stroke', desc: "A stroke is deducted from your score for the hole you carry this card into. Every shot counts less when you've earned this." },
+      { type: 'reward', name: 'Non-Tee Mulligan', desc: 'You may retake any one non-tee shot on the hole you carry this card into. Save it for when it hurts most.' },
+      { type: 'reward', name: 'Gimme Gimme', desc: "Any putt within your putter's length counts as holed at no stroke cost on the hole you carry this card into." },
+      { type: 'reward', name: 'Improved Lie', desc: 'Once per hole, you may improve your ball\'s lie within one club length — no closer to the hole, no penalty.' }
+    ];
 
-    function renderCarousel(index) {
+    let cardIndex = 0;
+    let effectIndex = 0;
+
+    function renderCard(index) {
       const c = allCards[index];
-
       document.getElementById('carousel-card').innerHTML = `
-        <div class="card-item ${c.type}">
+        <div class="card-item ${c.type}" onclick="openModal(${index})">
           <img class="card-image" src="images/${c.key}.png" alt="${c.name}" onerror="this.style.display='none'" />
           <div class="card-body">
             <p class="card-trigger">${c.trigger}</p>
             <h3 class="card-name">${c.name}</h3>
-            <p class="card-desc">${c.desc}</p>
           </div>
+          <div class="card-tap-hint">Tap for details</div>
         </div>`;
-
       document.getElementById('carousel-current').textContent = index + 1;
-      const typeLabel = document.getElementById('carousel-type-label');
-      typeLabel.textContent = c.type === 'reward' ? 'Reward' : 'Consequence';
-      typeLabel.className = `type-label ${c.type}`;
-
-      const dotsEl = document.getElementById('carousel-dots');
-      dotsEl.innerHTML = allCards.map((card, i) =>
+      const lbl = document.getElementById('carousel-type-label');
+      lbl.textContent = c.type === 'reward' ? 'Reward' : 'Consequence';
+      lbl.className = `type-label ${c.type}`;
+      document.getElementById('carousel-dots').innerHTML = allCards.map((card, i) =>
         `<div class="dot ${card.type === 'reward' ? 'reward-dot' : ''} ${i === index ? 'active' : ''}" onclick="goToCard(${i})"></div>`
       ).join('');
     }
 
     function carouselMove(dir) {
-      currentIndex = (currentIndex + dir + allCards.length) % allCards.length;
-      renderCarousel(currentIndex);
+      cardIndex = (cardIndex + dir + allCards.length) % allCards.length;
+      renderCard(cardIndex);
     }
 
-    function goToCard(index) {
-      currentIndex = index;
-      renderCarousel(index);
+    function goToCard(i) { cardIndex = i; renderCard(i); }
+
+    function openModal(index) {
+      const c = allCards[index];
+      const box = document.getElementById('modal-box');
+      box.className = `modal-box ${c.type}`;
+      const img = document.getElementById('modal-img');
+      img.src = `images/${c.key}.png`;
+      img.style.display = 'block';
+      document.getElementById('modal-trigger').textContent = c.trigger;
+      document.getElementById('modal-name').textContent = c.name;
+      document.getElementById('modal-detail').textContent = c.detail;
+      document.getElementById('card-modal').classList.add('open');
     }
+
+    function closeModal(e) {
+      if (e.target === document.getElementById('card-modal'))
+        document.getElementById('card-modal').classList.remove('open');
+    }
+
+    function closeModalBtn() {
+      document.getElementById('card-modal').classList.remove('open');
+    }
+
+    function renderEffect(index) {
+      const e = allEffects[index];
+      document.getElementById('effect-card').innerHTML = `
+        <div class="effect-item ${e.type}">
+          <div class="effect-body">
+            <p class="effect-type">${e.type === 'reward' ? '⚪ Reward' : '⚫ Consequence'}</p>
+            <h3 class="effect-name">${e.name}</h3>
+            <p class="effect-desc">${e.desc}</p>
+          </div>
+        </div>`;
+      document.getElementById('eff-current').textContent = index + 1;
+      const lbl = document.getElementById('eff-type-label');
+      lbl.textContent = e.type === 'reward' ? 'Reward' : 'Consequence';
+      lbl.className = `type-label ${e.type}`;
+      document.getElementById('effect-dots').innerHTML = allEffects.map((ef, i) =>
+        `<div class="dot ${ef.type === 'reward' ? 'reward-dot' : ''} ${i === index ? 'active' : ''}" onclick="goToEffect(${i})"></div>`
+      ).join('');
+    }
+
+    function effectMove(dir) {
+      effectIndex = (effectIndex + dir + allEffects.length) % allEffects.length;
+      renderEffect(effectIndex);
+    }
+
+    function goToEffect(i) { effectIndex = i; renderEffect(i); }
 
     function toggleFaq(btn) {
       const answer = btn.nextElementSibling;
       const isOpen = answer.classList.contains('open');
       document.querySelectorAll('.faq-a.open').forEach(a => a.classList.remove('open'));
       document.querySelectorAll('.faq-q.open').forEach(q => q.classList.remove('open'));
-      if (!isOpen) {
-        answer.classList.add('open');
-        btn.classList.add('open');
-      }
+      if (!isOpen) { answer.classList.add('open'); btn.classList.add('open'); }
     }
 
-    // Init carousel
-    renderCarousel(0);
+    renderCard(0);
+    renderEffect(0);
   </script>
 
 </body>
