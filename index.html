@@ -77,10 +77,18 @@
       justify-content: center;
       text-align: center;
       padding: 4rem 5%;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.7) 100%),
-                  url('images/hero-bg.jpg') center center / cover no-repeat;
+      background: radial-gradient(ellipse at 50% 60%, #1a3d20 0%, var(--black) 70%);
       position: relative;
       overflow: hidden;
+    }
+    .hero-bg-svg {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(600px, 90vw);
+      opacity: 0.12;
+      pointer-events: none;
     }
     .hero-eyebrow {
       font-size: 0.75rem;
@@ -242,7 +250,7 @@
       margin-top: 2rem;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       gap: 1.5rem;
     }
 
@@ -253,34 +261,36 @@
       color: var(--text-muted);
     }
 
-    .carousel-counter .type-label {
-      font-weight: 700;
-    }
+    .carousel-counter .type-label { font-weight: 700; }
     .carousel-counter .type-label.consequence { color: var(--white); }
     .carousel-counter .type-label.reward { color: var(--green); }
 
     .carousel-stage {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 1rem;
       width: 100%;
-      max-width: 380px;
+      max-width: 480px;
     }
 
     .carousel-arrow {
       background: var(--grey);
       border: 1px solid var(--grey-mid);
       color: var(--white);
-      width: 40px;
-      height: 40px;
+      min-width: 44px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       cursor: pointer;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s;
+      line-height: 1;
+      padding: 0;
+      box-sizing: border-box;
     }
     .carousel-arrow:hover { border-color: var(--green); color: var(--green); }
 
@@ -288,6 +298,28 @@
       flex: 1;
       overflow: hidden;
     }
+
+    /* card carousel specific */
+    #cards .carousel-stage { max-width: 460px; }
+    /* effect carousel portrait */
+    #effects .carousel-stage { max-width: 460px; }
+    #effects .effect-item { min-height: 280px; }
+
+    .carousel-dots {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--grey-mid);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .dot.active { background: var(--green); }
+    .dot.reward-dot.active { background: var(--white); }
 
     .card-item {
       border-radius: 8px;
@@ -390,7 +422,7 @@
       background: var(--white);
       border: 1px solid #ddd;
     }
-    .effect-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: 0.3rem; }
+    .effect-body { padding: 1.5rem 1.25rem 2rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; min-height: 300px; justify-content: center; }
     .effect-type {
       font-size: 0.6rem;
       text-transform: uppercase;
@@ -589,8 +621,8 @@
       .nav-links a { font-size: 0.75rem; }
       section { padding: 3.5rem 4%; }
       .hero { min-height: 80vh; }
-      .carousel-stage { max-width: 300px; }
-      .carousel-arrow { width: 32px; height: 32px; font-size: 0.9rem; }
+      .carousel-stage { max-width: 100%; }
+      .carousel-arrow { min-width: 40px; width: 40px; height: 40px; font-size: 1rem; }
     }
   </style>
 </head>
@@ -606,6 +638,14 @@
 
   <!-- HERO -->
   <section class="hero">
+    <!-- Golfer SVG background -->
+    <svg class="hero-bg-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+      <g fill="white">
+        <path d="M275.076,93.952c2.991-24.117-14.126-46.108-38.252-49.108c-24.126-3-46.107,14.117-49.107,38.252c-3,24.126,14.126,46.108,38.256,49.107C250.085,135.195,272.076,118.078,275.076,93.952z"/>
+        <path d="M384.588,229.743c-20.572-32.927-36.882-70.296-41.076-77.557c-2.487-4.316-2.73-7.361-0.78-11.622c8.4-12.144,16.991-24.197,25.685-36.125c7.54-10.352,18.319-21.802,14.202-35.9c-2.364-8.108-9.541-11.486-15.604-16.424c-15.23-12.441-30.414-24.982-45.742-37.333c-4.292-3.45-8.436-7.08-12.783-10.45c-7.068-6.288-17.897-5.658-24.18,1.424c-5.297,5.964-5.617,14.576-1.361,20.9L266.932,43.34c3.928,3.1,7.446,6.658,10.436,10.648l15.987-16.648l40.324,39.126l-31.878,33.954c-17.613,17.252-59.472,42.072-49.891,77.035c7.302,26.648,32.418,72.404,32.418,85.323c0,17.892-9.81,108.287-9.81,108.287c-0.064,0.352-0.081,0.703-0.126,1.063l-28.396,98.143c-3.225,10.612,2.775,21.838,13.4,25.054c10.617,3.225,21.842-2.766,25.063-13.396l34.162-90.873c0.473-1.054,0.892-2.153,1.225-3.297l0.37-0.982c0.518-1.721,18.468-86.8,18.468-86.8l0.798-7.91l-8.586,85.324c-0.248,1.504-0.41,3.027-0.41,4.613l4.207,97.665c0,12.333,9.991,22.333,22.324,22.333c12.33,0,22.333-10,22.333-22.333l5.77-94.134l13.792-86.927C401.889,281.768,405.155,262.67,384.588,229.743z"/>
+        <path d="M187.676,125.879l-73.224,76.242c-3.734,3.901-4.631,9.712-2.239,14.55l18.554,37.531c1.464,2.991,4.162,5.171,7.379,6.036c3.216,0.847,6.64,0.279,9.396-1.586l13.936-9.397c2.753-1.864,4.568-4.819,4.987-8.117c0.419-3.297-0.608-6.612-2.815-9.099l-24.972-33.594l60.035-62.53C194.64,133.104,190.951,129.717,187.676,125.879z"/>
+      </g>
+    </svg>
     <p class="hero-eyebrow">The Golf Card Game</p>
     <h1>FOREFEIT</h1>
     <p class="hero-sub">Play it during your round. Every bad shot — or brilliant one — earns a card. <strong>Carry it into the next hole and face what comes with it.</strong></p>
@@ -778,13 +818,13 @@
       { type: 'consequence', key: 'bunker-buster', name: 'Bunker Buster', trigger: 'Ball lands in a bunker', detail: "Awarded when your ball finds any sand bunker during the hole. Whether it's a greenside or fairway bunker, if your ball settles in the sand, this card is yours. You carry it into the next hole." },
       { type: 'consequence', key: 'fence-hopper', name: 'Fence Hopper', trigger: 'Ball goes out of bounds', detail: 'Awarded when your ball crosses the boundary markers and is declared out of bounds. Standard OB rules still apply — this card adds an extra layer on top for the following hole.' },
       { type: 'consequence', key: 'splash-zone', name: 'Splash Zone', trigger: 'Ball lands in water', detail: 'Awarded when your ball finds any water hazard — dam, stream, pond, or drainage ditch. Take your drop as normal, but carry this card into the next hole.' },
-      { type: 'consequence', key: 'bush-whacker', name: 'Bush Whacker', trigger: 'Ball lands in rough or bush', detail: "Awarded when your ball ends up in the rough, thick grass, or any bush. If you have to hack it out sideways, this card is probably yours." },
-      { type: 'consequence', key: 'tree-hugger', name: 'Tree Hugger', trigger: 'Ball strikes a tree', detail: "Awarded when your ball makes audible contact with any tree during the hole. If the group hears the knock, you're carrying this card into the next hole." },
-      { type: 'consequence', key: 'the-houdini', name: 'The Houdini', trigger: 'Ball cannot be found', detail: 'Awarded when your ball is declared lost after the search period. If it vanished without a trace, this card finds you instead. Play a provisional and carry this into the next hole.' },
+      { type: 'consequence', key: 'bush-whacker', name: 'Bush Whacker', trigger: 'Ball lands in or is obstructed by a bush (within one club length)', detail: 'Awarded when your ball lands in a bush, or when a bush within one club length obstructs your shot. If you cannot play freely without the bush interfering, this card is yours.' },
+      { type: 'consequence', key: 'tree-hugger', name: 'Tree Hugger', trigger: 'Ball hits a tree or shot is obstructed by a tree (within one club length)', detail: 'Awarded when your ball makes contact with a tree, or when a tree within one club length obstructs your shot. If the trunk or branches are in your way, you carry this card into the next hole.' },
+      { type: 'consequence', key: 'the-houdini', name: 'The Houdini', trigger: 'Ball seen to land but cannot be found', detail: "Awarded when you and the group see your ball land, but it simply cannot be located. Not a blind shot — you watched it go down. It just vanished. Spooky. Carry this into the next hole." },
       { type: 'reward', key: 'par-fection', name: 'Par Fection', trigger: 'Player makes par', detail: 'Awarded when you complete a hole in exactly the number of strokes expected — no more, no less. Consistent, solid golf deserves a reward. Carry this into the next hole and enjoy the benefit.' },
-      { type: 'reward', key: 'chip-n-dip', name: "Chip 'n Dip", trigger: 'Ball chips into the hole', detail: 'Awarded when you chip from off the green and the ball goes directly into the cup without putting. One of the most satisfying moments in golf — and now it pays off on the next hole too.' },
+      { type: 'reward', key: 'chip-n-dip', name: "Chip 'n Dip", trigger: 'Hole out from off the green with any club except a putter', detail: "Awarded when you hole out from off the green using any club other than your putter. Chip, pitch, bump — whatever gets it in. If it goes in and you didn't putt it, this card is yours." },
       { type: 'reward', key: 'eager-eagle', name: 'Eager Eagle', trigger: 'Player makes eagle', detail: 'Awarded when you complete a hole two strokes under par. An exceptional score deserves an exceptional reward. Carry this into the following hole and let the group feel your dominance.' },
-      { type: 'reward', key: 'early-bird', name: 'Early Bird', trigger: 'First player to finish the hole', detail: 'Awarded to whichever player holes out before anyone else in the group. Reward for clean, decisive play and good pace. First one in earns the advantage heading into the next hole.' },
+      { type: 'reward', key: 'early-bird', name: 'Early Bird', trigger: 'Player makes birdie', detail: 'Awarded when you complete a hole one stroke under par. A birdie is the mark of a sharp round — and now it earns you a carry-forward advantage on the next hole.' },
       { type: 'reward', key: 'pin-seeker', name: 'Pin Seeker', trigger: 'Ball lands within a club length of the pin', detail: 'Awarded when your approach shot finishes within one club length of the flagstick. The group measures after the shot. Dead on target earns you this card and its reward on the next hole.' },
       { type: 'reward', key: 'go-long', name: 'Go Long', trigger: 'Longest drive in the group', detail: 'Awarded to the player with the longest tee shot on any given hole. The ball must be in bounds to qualify. Big hitters rejoice — distance finally has its own reward.' }
     ];
@@ -812,10 +852,6 @@
       document.getElementById('carousel-card').innerHTML = `
         <div class="card-item ${c.type}" onclick="openModal(${index})">
           <img class="card-image" src="images/${c.key}.png" alt="${c.name}" onerror="this.style.display='none'" />
-          <div class="card-body">
-            <p class="card-trigger">${c.trigger}</p>
-            <h3 class="card-name">${c.name}</h3>
-          </div>
           <div class="card-tap-hint">Tap for details</div>
         </div>`;
       document.getElementById('carousel-current').textContent = index + 1;
