@@ -1351,7 +1351,13 @@
       }
 
       if (!validateCases()) return;
+
+      const selected = Array.from(cbs).map(cb => cb.value).join(', ');
       document.getElementById('order-summary-field').value = selected || 'N/A';
+
+      const submitBtn = document.querySelector('.btn-submit');
+      submitBtn.textContent = 'Sending...';
+      submitBtn.disabled = true;
 
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -1360,8 +1366,14 @@
         if (res.ok) {
           document.getElementById('order-form').style.display = 'none';
           document.getElementById('form-success').style.display = 'block';
+        } else {
+          submitBtn.textContent = 'Place Order';
+          submitBtn.disabled = false;
+          alert('Something went wrong. Please try again or contact us directly.');
         }
       }).catch(() => {
+        submitBtn.textContent = 'Place Order';
+        submitBtn.disabled = false;
         alert('Something went wrong. Please try again or contact us directly.');
       });
     });
