@@ -67,6 +67,7 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--green); }
+    .nav-links a.active { color: var(--green); }
 
     /* HERO */
     .hero {
@@ -404,7 +405,11 @@
     .dot.active { background: var(--green); }
     .dot.reward-dot.active { background: var(--white); }
 
-    /* EFFECTS SECTION */
+    .carousel-dots {
+      display: flex;
+      gap: 0.4rem;
+      padding-left: 56px;
+    }
     #effects { background: var(--black); }
 
     .effect-item {
@@ -594,6 +599,170 @@
       font-size: 1rem;
     }
 
+    /* PAGE SWITCHING */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .nav-links a.active { color: var(--green); }
+
+    /* ORDER PAGE */
+    #page-order { background: var(--black); min-height: 100vh; padding: 4rem 5%; }
+    #page-media { background: var(--black); min-height: 100vh; padding: 4rem 5%; }
+
+    /* PRICING TABLE */
+    .pricing-table {
+      width: 100%;
+      max-width: 720px;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      font-size: 0.875rem;
+    }
+    .pricing-table th {
+      background: var(--green);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .pricing-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--grey-mid);
+      color: var(--text-muted);
+    }
+    .pricing-table tr:hover td { background: var(--grey); }
+    .pricing-table .price-col { color: var(--white); font-weight: 600; }
+    .pricing-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      font-style: italic;
+    }
+
+    /* ORDER FORM */
+    .order-form {
+      max-width: 620px;
+      margin-top: 3rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .form-group label span { color: var(--green); }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--grey);
+      border: 1px solid var(--grey-mid);
+      border-radius: 4px;
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus { outline: none; border-color: var(--green); }
+    .form-input option { background: var(--grey); }
+    textarea.form-input { resize: vertical; min-height: 100px; }
+
+    .card-checkboxes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .card-checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      border: 1px solid var(--grey-mid);
+      cursor: pointer;
+      transition: border-color 0.2s;
+      font-size: 0.8rem;
+    }
+    .card-checkbox-item:hover { border-color: var(--green); }
+    .card-checkbox-item input { accent-color: var(--green); cursor: pointer; }
+    .card-checkbox-item.consequence-cb { background: var(--grey); color: var(--white); }
+    .card-checkbox-item.reward-cb { background: #f5f5f5; color: var(--black); }
+    .card-checkbox-item.reward-cb:hover { border-color: var(--green); }
+
+    .colour-options {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .colour-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .colour-option input { accent-color: var(--green); }
+
+    .form-validation-msg {
+      font-size: 0.75rem;
+      color: var(--green);
+      margin-top: 0.4rem;
+      display: none;
+    }
+    .form-validation-msg.error { color: #e05555; display: block; }
+
+    .btn-submit {
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      padding: 0.85rem 2.5rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-submit:hover { background: var(--green-light); }
+
+    .form-success {
+      display: none;
+      padding: 1.5rem;
+      background: var(--grey);
+      border: 1px solid var(--green);
+      border-radius: 6px;
+      color: var(--white);
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+
+    /* MEDIA PAGE */
+    .coming-soon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      text-align: center;
+      gap: 1rem;
+    }
+    .coming-soon-icon { font-size: 4rem; opacity: 0.3; }
+    .coming-soon h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: var(--white);
+    }
+    .coming-soon p { color: var(--text-muted); max-width: 400px; }
     /* FOOTER */
     footer {
       background: var(--grey);
@@ -630,11 +799,16 @@
 
   <!-- NAV -->
   <nav>
-    <a href="#" class="nav-logo">FOREFEIT</a>
+    <a href="#" class="nav-logo" onclick="showPage('home')">FOREFEIT</a>
     <ul class="nav-links">
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+      <li><a href="#" onclick="showPage('order')" id="nav-order">Order</a></li>
+      <li><a href="#" onclick="showPage('media')" id="nav-media">Media</a></li>
     </ul>
   </nav>
+
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page active">
 
   <!-- HERO -->
   <section class="hero">
@@ -806,6 +980,151 @@
     </div>
   </section>
 
+  </div><!-- END HOME PAGE -->
+
+  <!-- ORDER PAGE -->
+  <div id="page-order" class="page">
+    <section id="page-order-inner">
+      <p class="section-label">Pricing</p>
+      <h2 class="section-title">Pick Your Set.</h2>
+      <p class="section-body">Every set includes one case per 4 cards. Mix and match your cards to suit your course.</p>
+
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Cards</th>
+            <th>Cases Included</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Starter Set</td><td>4 cards</td><td>1 case</td><td class="price-col">R200</td></tr>
+          <tr><td>Mid Set</td><td>8 cards</td><td>2 cases</td><td class="price-col">R300</td></tr>
+          <tr><td>Full Set</td><td>12 cards</td><td>3 cases</td><td class="price-col">R400</td></tr>
+          <tr><td>Additional Card</td><td>1 card</td><td>—</td><td class="price-col">R30</td></tr>
+          <tr><td>Additional Case</td><td>—</td><td>1 case</td><td class="price-col">R80</td></tr>
+        </tbody>
+      </table>
+      <p class="pricing-note">* Shipping at customer's expense. We will confirm shipping cost before finalising your order.</p>
+
+      <div class="order-form">
+        <p class="section-label" style="margin-top:3rem;">Place Your Order</p>
+        <h2 class="section-title">Order Form.</h2>
+        <p class="section-body" style="margin-bottom:2rem;">Fill in your details and we'll be in touch to confirm your order and arrange payment.</p>
+
+        <form id="order-form" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="2e30216c-fc30-4c4c-bb57-3d05e743b760">
+          <input type="hidden" name="subject" value="New FOREFEIT Order">
+          <input type="hidden" id="order-summary-field" name="order_summary" value="">
+
+          <!-- Name -->
+          <div class="form-group">
+            <label>Full Name <span>*</span></label>
+            <input type="text" name="name" class="form-input" required placeholder="Your full name">
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label>Email Address <span>*</span></label>
+            <input type="email" name="email" class="form-input" required placeholder="your@email.com">
+          </div>
+
+          <!-- Phone -->
+          <div class="form-group">
+            <label>Phone Number <span>*</span></label>
+            <input type="tel" name="phone" class="form-input" required placeholder="0XX XXX XXXX">
+          </div>
+
+          <!-- Order Type -->
+          <div class="form-group">
+            <label>Order Type <span>*</span></label>
+            <select name="order_type" class="form-input" id="order-type" onchange="handleOrderType(this.value)" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="Starter Set — 4 cards + 1 case — R200">Starter Set (4 cards + 1 case) — R200</option>
+              <option value="Mid Set — 8 cards + 2 cases — R300">Mid Set (8 cards + 2 cases) — R300</option>
+              <option value="Full Set — 12 cards + 3 cases — R400">Full Set (12 cards + 3 cases) — R400</option>
+              <option value="Additional Cards">Additional Cards — R30 each</option>
+              <option value="Additional Case">Additional Case — R80 each</option>
+            </select>
+          </div>
+
+          <!-- Card Selection -->
+          <div class="form-group" id="card-selection-group" style="display:none;">
+            <label>Select Your Cards <span>*</span> <span id="card-selection-hint" style="color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:0.7rem;"></span></label>
+            <div class="card-checkboxes">
+              <label class="card-checkbox-item consequence-cb"><input type="checkbox" class="card-cb" value="Bunker Buster (Consequence)"> Bunker Buster</label>
+              <label class="card-checkbox-item consequence-cb"><input type="checkbox" class="card-cb" value="Fence Hopper (Consequence)"> Fence Hopper</label>
+              <label class="card-checkbox-item consequence-cb"><input type="checkbox" class="card-cb" value="Splash Zone (Consequence)"> Splash Zone</label>
+              <label class="card-checkbox-item consequence-cb"><input type="checkbox" class="card-cb" value="Bush Whacker (Consequence)"> Bush Whacker</label>
+              <label class="card-checkbox-item consequence-cb"><input type="checkbox" class="card-cb" value="Tree Hugger (Consequence)"> Tree Hugger</label>
+              <label class="card-checkbox-item consequence-cb"><input type="checkbox" class="card-cb" value="The Houdini (Consequence)"> The Houdini</label>
+              <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Par Fection (Reward)"> Par Fection</label>
+              <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Chip n Dip (Reward)"> Chip 'n Dip</label>
+              <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Eager Eagle (Reward)"> Eager Eagle</label>
+              <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Early Bird (Reward)"> Early Bird</label>
+              <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Pin Seeker (Reward)"> Pin Seeker</label>
+              <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Go Long (Reward)"> Go Long</label>
+            </div>
+            <div class="form-validation-msg" id="card-validation-msg">Please select the correct number of cards.</div>
+          </div>
+
+          <!-- Case Colour & Quantity -->
+          <div class="form-group" id="case-colour-group" style="display:none;">
+            <label>Cases by Colour <span>*</span></label>
+            <p id="case-qty-hint" style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.5rem;"></p>
+            <div style="display:flex; gap:1.5rem; margin-top:0.25rem; flex-wrap:wrap;">
+              <div>
+                <label style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">Black Cases</label>
+                <input type="number" name="black_cases" id="black-cases" class="form-input" min="0" max="20" placeholder="0" style="max-width:100px;" value="0" oninput="validateCases()">
+              </div>
+              <div>
+                <label style="font-size:0.75rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">White Cases</label>
+                <input type="number" name="white_cases" id="white-cases" class="form-input" min="0" max="20" placeholder="0" style="max-width:100px;" value="0" oninput="validateCases()">
+              </div>
+            </div>
+            <div class="form-validation-msg" id="case-validation-msg"></div>
+          </div>
+
+          <!-- Postage -->
+          <div class="form-group">
+            <label>Delivery</label>
+            <p style="font-size:0.8rem;color:var(--green);font-weight:600;margin-bottom:0.5rem;">Free delivery within the Port Elizabeth area.</p>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <label class="colour-option"><input type="radio" name="delivery" value="Port Elizabeth (Free)"> Port Elizabeth (Free)</label>
+              <label class="colour-option"><input type="radio" name="delivery" value="Postage required"> Postage required — quote needed</label>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="form-group">
+            <label>Special Notes</label>
+            <textarea name="notes" class="form-input" placeholder="Any special requests or questions..."></textarea>
+          </div>
+
+          <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:1rem;font-style:italic;">
+            * This is not a confirmed order. We will contact you to confirm your order details and provide a total cost including any applicable postage before finalising.
+          </p>
+
+          <button type="submit" class="btn-submit">Place Order</button>
+        </form>
+
+        <div class="form-success" id="form-success">
+          Thank you! Your order request has been received. We will be in touch shortly to confirm your order and provide a total cost.
+        </div>
+      </div>
+    </section>
+  </div><!-- END ORDER PAGE -->
+
+  <!-- MEDIA PAGE -->
+  <div id="page-media" class="page">
+    <div class="coming-soon">
+      <div class="coming-soon-icon">🎬</div>
+      <h2>Coming Soon</h2>
+      <p>Photos, videos, and highlights from FOREFEIT in action. Check back soon!</p>
+    </div>
+  </div><!-- END MEDIA PAGE -->
+
   <!-- FOOTER -->
   <footer>
     <span class="footer-logo">FOREFEIT</span>
@@ -918,6 +1237,9 @@
 
     function goToEffect(i) { effectIndex = i; renderEffect(i); }
 
+    renderCard(0);
+    renderEffect(0);
+
     function toggleFaq(btn) {
       const answer = btn.nextElementSibling;
       const isOpen = answer.classList.contains('open');
@@ -926,8 +1248,123 @@
       if (!isOpen) { answer.classList.add('open'); btn.classList.add('open'); }
     }
 
-    renderCard(0);
-    renderEffect(0);
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      document.getElementById('page-' + page).classList.add('active');
+      document.getElementById('nav-' + page).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    let maxCards = 0;
+    let maxCases = 0;
+
+    function handleOrderType(val) {
+      const cardGroup = document.getElementById('card-selection-group');
+      const caseColour = document.getElementById('case-colour-group');
+      const hint = document.getElementById('card-selection-hint');
+      const caseHint = document.getElementById('case-qty-hint');
+      const cbs = document.querySelectorAll('.card-cb');
+
+      cardGroup.style.display = 'none';
+      caseColour.style.display = 'none';
+      maxCards = 0;
+      maxCases = 0;
+      document.getElementById('black-cases').value = 0;
+      document.getElementById('white-cases').value = 0;
+      document.getElementById('case-validation-msg').classList.remove('error');
+      cbs.forEach(cb => { cb.checked = false; cb.disabled = false; });
+
+      if (val.includes('Starter')) {
+        maxCards = 4; maxCases = 1;
+        cardGroup.style.display = 'block';
+        caseColour.style.display = 'block';
+        hint.textContent = '— choose exactly 4';
+        caseHint.textContent = 'Starter set includes 1 case. Total black + white cases cannot exceed 1.';
+      } else if (val.includes('Mid')) {
+        maxCards = 8; maxCases = 2;
+        cardGroup.style.display = 'block';
+        caseColour.style.display = 'block';
+        hint.textContent = '— choose exactly 8';
+        caseHint.textContent = 'Mid set includes 2 cases. Total black + white cases cannot exceed 2.';
+      } else if (val.includes('Full')) {
+        maxCards = 12; maxCases = 3;
+        cardGroup.style.display = 'block';
+        caseColour.style.display = 'block';
+        hint.textContent = '— all 12 selected';
+        caseHint.textContent = 'Full set includes 3 cases. Total black + white cases cannot exceed 3.';
+        cbs.forEach(cb => { cb.checked = true; cb.disabled = true; });
+      } else if (val === 'Additional Cards') {
+        maxCards = 12; maxCases = 0;
+        cardGroup.style.display = 'block';
+        hint.textContent = '— select the cards you want';
+      } else if (val === 'Additional Case') {
+        maxCases = 999;
+        caseColour.style.display = 'block';
+        caseHint.textContent = 'Order as many additional cases as you need.';
+      }
+    }
+
+    function validateCases() {
+      if (maxCases === 999 || maxCases === 0) return true;
+      const black = parseInt(document.getElementById('black-cases').value) || 0;
+      const white = parseInt(document.getElementById('white-cases').value) || 0;
+      const msg = document.getElementById('case-validation-msg');
+      if (black + white > maxCases) {
+        msg.textContent = `Total cases cannot exceed ${maxCases} for this set.`;
+        msg.classList.add('error');
+        return false;
+      }
+      msg.classList.remove('error');
+      return true;
+    }
+
+    document.querySelectorAll('.card-cb').forEach(cb => {
+      cb.addEventListener('change', function() {
+        if (!maxCards) return;
+        const checked = document.querySelectorAll('.card-cb:checked');
+        if (checked.length >= maxCards) {
+          document.querySelectorAll('.card-cb:not(:checked)').forEach(u => u.disabled = true);
+        } else {
+          document.querySelectorAll('.card-cb').forEach(u => { if (!u.disabled || checked.length < maxCards) u.disabled = false; });
+        }
+        const msg = document.getElementById('card-validation-msg');
+        msg.classList.remove('error');
+      });
+    });
+
+    document.getElementById('order-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const val = document.getElementById('order-type').value;
+      const cbs = document.querySelectorAll('.card-cb:checked');
+      const msg = document.getElementById('card-validation-msg');
+      msg.classList.remove('error');
+
+      let required = 0;
+      if (val.includes('Starter')) required = 4;
+      if (val.includes('Mid')) required = 8;
+
+      if (required > 0 && cbs.length !== required) {
+        msg.textContent = `Please select exactly ${required} cards.`;
+        msg.classList.add('error');
+        return;
+      }
+
+      if (!validateCases()) return;
+      document.getElementById('order-summary-field').value = selected || 'N/A';
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: new FormData(this)
+      }).then(res => {
+        if (res.ok) {
+          document.getElementById('order-form').style.display = 'none';
+          document.getElementById('form-success').style.display = 'block';
+        }
+      }).catch(() => {
+        alert('Something went wrong. Please try again or contact us directly.');
+      });
+    });
   </script>
 
 </body>
