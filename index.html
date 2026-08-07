@@ -854,58 +854,6 @@
     </div>
   </section>
 
-  <!-- CARDS -->
-  <section id="cards">
-    <p class="section-label">The Cards</p>
-    <h2 class="section-title">Know Your Cards.</h2>
-    <p class="section-body">Six consequence cards, six reward cards. Each comes with a default effect — swap in your own before the round starts.</p>
-
-    <div class="carousel-wrap">
-      <div class="carousel-counter">
-        Card <span id="carousel-current">1</span> of 12 —
-        <span id="carousel-type-label" class="type-label consequence">Consequence</span>
-      </div>
-      <div class="carousel-stage">
-        <button class="carousel-arrow" onclick="carouselMove(-1)">&#8592;</button>
-        <div class="carousel-card-wrap" id="carousel-card"></div>
-        <button class="carousel-arrow" onclick="carouselMove(1)">&#8594;</button>
-      </div>
-      <div class="carousel-dots" id="carousel-dots"></div>
-    </div>
-  </section>
-
-  <!-- MODAL -->
-  <div class="modal-overlay" id="card-modal" onclick="closeModal(event)">
-    <div class="modal-box" id="modal-box">
-      <button class="modal-close" onclick="closeModalBtn()">✕</button>
-      <img class="modal-img" id="modal-img" src="" alt="" onerror="this.style.display='none'" />
-      <div class="modal-body">
-        <p class="modal-trigger" id="modal-trigger"></p>
-        <h2 class="modal-name" id="modal-name"></h2>
-        <p class="modal-detail" id="modal-detail"></p>
-      </div>
-    </div>
-  </div>
-
-  <!-- EFFECTS -->
-  <section id="effects">
-    <p class="section-label">Consequences & Rewards</p>
-    <h2 class="section-title">What's at Stake.</h2>
-    <p class="section-body">Each card you carry applies one of these effects for the entire hole. Mix and match before your round.</p>
-    <div class="carousel-wrap" style="margin-top:2rem;">
-      <div class="carousel-counter">
-        Effect <span id="eff-current">1</span> of 12 —
-        <span id="eff-type-label" class="type-label consequence">Consequence</span>
-      </div>
-      <div class="carousel-stage">
-        <button class="carousel-arrow" onclick="effectMove(-1)">&#8592;</button>
-        <div class="carousel-card-wrap" id="effect-card"></div>
-        <button class="carousel-arrow" onclick="effectMove(1)">&#8594;</button>
-      </div>
-      <div class="carousel-dots" id="effect-dots"></div>
-    </div>
-  </section>
-
   <!-- FAQ -->
   <section id="faq">
     <p class="section-label">FAQ</p>
@@ -1182,64 +1130,6 @@
       ).join('');
     }
 
-    function carouselMove(dir) {
-      cardIndex = (cardIndex + dir + allCards.length) % allCards.length;
-      renderCard(cardIndex);
-    }
-
-    function goToCard(i) { cardIndex = i; renderCard(i); }
-
-    function openModal(index) {
-      const c = allCards[index];
-      const box = document.getElementById('modal-box');
-      box.className = `modal-box ${c.type}`;
-      const img = document.getElementById('modal-img');
-      img.src = `images/${c.key}.png`;
-      img.style.display = 'block';
-      document.getElementById('modal-trigger').textContent = c.trigger;
-      document.getElementById('modal-name').textContent = c.name;
-      document.getElementById('modal-detail').textContent = c.detail;
-      document.getElementById('card-modal').classList.add('open');
-    }
-
-    function closeModal(e) {
-      if (e.target === document.getElementById('card-modal'))
-        document.getElementById('card-modal').classList.remove('open');
-    }
-
-    function closeModalBtn() {
-      document.getElementById('card-modal').classList.remove('open');
-    }
-
-    function renderEffect(index) {
-      const e = allEffects[index];
-      document.getElementById('effect-card').innerHTML = `
-        <div class="effect-item ${e.type}">
-          <div class="effect-body">
-            <p class="effect-type">${e.type === 'reward' ? '⚪ Reward' : '⚫ Consequence'}</p>
-            <h3 class="effect-name">${e.name}</h3>
-            <p class="effect-desc">${e.desc}</p>
-          </div>
-        </div>`;
-      document.getElementById('eff-current').textContent = index + 1;
-      const lbl = document.getElementById('eff-type-label');
-      lbl.textContent = e.type === 'reward' ? 'Reward' : 'Consequence';
-      lbl.className = `type-label ${e.type}`;
-      document.getElementById('effect-dots').innerHTML = allEffects.map((ef, i) =>
-        `<div class="dot ${ef.type === 'reward' ? 'reward-dot' : ''} ${i === index ? 'active' : ''}" onclick="goToEffect(${i})"></div>`
-      ).join('');
-    }
-
-    function effectMove(dir) {
-      effectIndex = (effectIndex + dir + allEffects.length) % allEffects.length;
-      renderEffect(effectIndex);
-    }
-
-    function goToEffect(i) { effectIndex = i; renderEffect(i); }
-
-    renderCard(0);
-    renderEffect(0);
-
     function toggleFaq(btn) {
       const answer = btn.nextElementSibling;
       const isOpen = answer.classList.contains('open');
@@ -1335,7 +1225,10 @@
 
     document.getElementById('order-form').addEventListener('submit', function(e) {
       e.preventDefault();
+
       const val = document.getElementById('order-type').value;
+      if (!val) { alert('Please select an order type.'); return; }
+
       const cbs = document.querySelectorAll('.card-cb:checked');
       const msg = document.getElementById('card-validation-msg');
       msg.classList.remove('error');
@@ -1343,14 +1236,16 @@
       let required = 0;
       if (val.includes('Starter')) required = 4;
       if (val.includes('Mid')) required = 8;
+      if (val.includes('Full')) required = 12;
 
       if (required > 0 && cbs.length !== required) {
         msg.textContent = `Please select exactly ${required} cards.`;
         msg.classList.add('error');
+        msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
 
-      if (!validateCases()) return;
+      if (maxCases > 0 && maxCases !== 999 && !validateCases()) return;
 
       const selected = Array.from(cbs).map(cb => cb.value).join(', ');
       document.getElementById('order-summary-field').value = selected || 'N/A';
@@ -1369,12 +1264,12 @@
         } else {
           submitBtn.textContent = 'Place Order';
           submitBtn.disabled = false;
-          alert('Something went wrong. Please try again or contact us directly.');
+          alert('Submission failed. Please try again or contact us directly.');
         }
-      }).catch(() => {
+      }).catch(err => {
         submitBtn.textContent = 'Place Order';
         submitBtn.disabled = false;
-        alert('Something went wrong. Please try again or contact us directly.');
+        alert('Connection error. Please check your internet and try again.');
       });
     });
   </script>
