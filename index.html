@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FOREFEIT — The Golf Card Game</title>
+  <title>Forefeit — The Golf Card Game</title>
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
@@ -140,7 +140,7 @@
     .btn-outline:hover { border-color: var(--green); color: var(--green); }
 
     /* SECTIONS */
-    section { padding: 5rem 5%; }
+    section { padding: 5rem 5%; text-align: center; }
     .section-label {
       font-size: 0.7rem;
       letter-spacing: 0.2em;
@@ -159,67 +159,63 @@
       color: var(--text-muted);
       max-width: 600px;
       font-size: 1rem;
+      margin: 0 auto;
     }
 
     /* HOW TO PLAY */
     #how-to-play { background: var(--grey); }
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 2rem;
-      margin-top: 3rem;
+
+    /* STEPS CAROUSEL */
+    .steps-carousel { margin: 2rem auto 0; max-width: 560px; }
+    .steps-nav { display: flex; align-items: center; gap: 1rem; justify-content: center; }
+    .step-arrow {
+      background: var(--grey-mid);
+      border: 1px solid var(--grey-mid);
+      color: var(--white);
+      min-width: 44px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      padding: 0;
     }
-    .step {
+    .step-arrow:hover { border-color: var(--green); color: var(--green); }
+    .step-card {
+      flex: 1;
       border-left: 3px solid var(--green);
-      padding-left: 1.25rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--grey);
+      border-radius: 0 6px 6px 0;
+      min-height: 120px;
     }
     .step-num {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: var(--green);
       line-height: 1;
     }
-    .step h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin: 0.25rem 0;
-      color: var(--white);
-    }
-    .step p { font-size: 0.875rem; color: var(--text-muted); }
+    .step-card h3 { font-size: 1rem; font-weight: 600; margin: 0.2rem 0; color: var(--white); }
+    .step-card p { font-size: 0.875rem; color: var(--text-muted); }
+    .step-dots { display: flex; gap: 0.4rem; margin-top: 1rem; justify-content: center; }
+    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--grey-mid); cursor: pointer; transition: background 0.2s; }
+    .step-dot.active { background: var(--green); }
 
-    /* CARDS SECTION */
-    #cards { background: #1a1a1a; }
-
-    .card-tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin: 2rem 0;
-    }
-    .tab-btn {
-      padding: 0.5rem 1.5rem;
-      border-radius: 3px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      border: 1px solid var(--grey-mid);
-      background: transparent;
-      color: var(--text-muted);
-      transition: all 0.2s;
-    }
-    .tab-btn.active-consequence {
-      background: var(--black);
-      color: var(--white);
-      border-color: var(--white);
-    }
-    .tab-btn.active-reward {
-      background: var(--white);
-      color: var(--black);
-      border-color: var(--white);
+    /* PC LAYOUT */
+    @media (min-width: 1100px) {
+      section { padding: 5rem 12%; }
+      nav { padding: 0 12%; }
+      footer { padding: 2rem 12%; }
+      #page-order { padding: 4rem 12%; }
+      #page-media { padding: 4rem 12%; }
     }
 
-    .faq-list { margin-top: 2.5rem; max-width: 720px; }
+    .faq-list { margin: 2.5rem auto 0; max-width: 720px; text-align: left; }
     .faq-item { border-bottom: 1px solid var(--grey-mid); }
     .faq-q {
       width: 100%;
@@ -302,8 +298,9 @@
       width: 100%;
       max-width: 720px;
       border-collapse: collapse;
-      margin-top: 2rem;
+      margin: 2rem auto 0;
       font-size: 0.875rem;
+      text-align: left;
     }
     .pricing-table th {
       background: var(--green);
@@ -331,7 +328,8 @@
     /* ORDER FORM */
     .order-form {
       max-width: 620px;
-      margin-top: 3rem;
+      margin: 3rem auto 0;
+      text-align: left;
     }
     .form-group {
       margin-bottom: 1.5rem;
@@ -486,7 +484,7 @@
 
   <!-- NAV -->
   <nav>
-    <a href="#" class="nav-logo" onclick="showPage('home')">FOREFEIT</a>
+    <a href="#" class="nav-logo" onclick="showPage('home')">Forefeit</a>
     <ul class="nav-links">
       <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
       <li><a href="#" onclick="showPage('order')" id="nav-order">Order</a></li>
@@ -508,7 +506,7 @@
       </g>
     </svg>
     <p class="hero-eyebrow">The Golf Card Game</p>
-    <h1>FOREFEIT</h1>
+    <h1>Forefeit</h1>
     <p class="hero-sub">Play it during your round. Every bad shot — or brilliant one — earns a card. <strong>Carry it into the next hole and face what comes with it.</strong></p>
   </section>
 
@@ -516,28 +514,14 @@
   <section id="how-to-play">
     <p class="section-label">How to Play</p>
     <h2 class="section-title">Simple Rules.<br>Serious Bragging Rights.</h2>
-    <p class="section-body">FOREFEIT drops into any round with any group. Pick your cards, play your game, and let the chaos unfold.</p>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <h3>Pick Your Cards</h3>
-        <p>Choose cards that suit your course — not every course has a bunker. Match the number of cards to the number of players.</p>
+    <p class="section-body">Forefeit drops into any round with any group. Pick your cards, play your game, and let the chaos unfold.</p>
+    <div class="steps-carousel">
+      <div class="steps-nav">
+        <button class="step-arrow" onclick="stepMove(-1)">&#8592;</button>
+        <div class="step-card" id="step-card"></div>
+        <button class="step-arrow" onclick="stepMove(1)">&#8594;</button>
       </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <h3>Earn a Card</h3>
-        <p>A card is awarded when its trigger event happens during a hole — ball in water, longest drive, chip-in, and more.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <h3>Carry It Forward</h3>
-        <p>The card takes effect on the next hole. You hold it until someone else earns it — so play well, or pay the price.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <h3>Make It Yours</h3>
-        <p>Mix consequences and rewards in the same game. Swap in custom forfeits. There are baseline rules, but how you play is up to your group.</p>
-      </div>
+      <div class="step-dots" id="step-dots"></div>
     </div>
   </section>
 
@@ -695,7 +679,7 @@
               <label class="card-checkbox-item consequence-cb"><input type="checkbox" class="card-cb" value="Tree Hugger (Consequence)"> Tree Hugger</label>
               <label class="card-checkbox-item consequence-cb"><input type="checkbox" class="card-cb" value="The Houdini (Consequence)"> The Houdini</label>
               <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Par Fection (Reward)"> Par Fection</label>
-              <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Chip n Dip (Reward)"> Chip 'n Dip</label>
+              <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Chip Inski (Reward)"> Chip Inski</label>
               <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Eager Eagle (Reward)"> Eager Eagle</label>
               <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Early Bird (Reward)"> Early Bird</label>
               <label class="card-checkbox-item reward-cb"><input type="checkbox" class="card-cb" value="Pin Seeker (Reward)"> Pin Seeker</label>
@@ -762,12 +746,39 @@
 
   <!-- FOOTER -->
   <footer>
-    <span class="footer-logo">FOREFEIT</span>
-    <p>© 2025 FOREFEIT. All rights reserved.</p>
+    <span class="footer-logo">Forefeit</span>
+    <p>© 2025 Forefeit. All rights reserved.</p>
     <p>forefeit.co.za</p>
   </footer>
 
   <script>
+    const steps = [
+      { num: '01', title: 'Pick Your Cards', body: 'Choose cards that suit your course — not every course has a bunker. Match the number of cards to the number of players.' },
+      { num: '02', title: 'Earn a Card', body: 'A card is awarded when its trigger event happens during a hole — ball in water, longest drive, chip-in, and more.' },
+      { num: '03', title: 'Carry It Forward', body: 'The card takes effect on the next hole. You hold it until someone else earns it — so play well, or pay the price.' },
+      { num: '04', title: 'Make It Yours', body: 'Mix consequences and rewards in the same game. Swap in custom forfeits. There are baseline rules, but how you play is up to your group.' }
+    ];
+
+    let stepIndex = 0;
+
+    function renderStep(index) {
+      const s = steps[index];
+      document.getElementById('step-card').innerHTML = `
+        <div class="step-num">${s.num}</div>
+        <h3>${s.title}</h3>
+        <p>${s.body}</p>`;
+      document.getElementById('step-dots').innerHTML = steps.map((_, i) =>
+        `<div class="step-dot ${i === index ? 'active' : ''}" onclick="goToStep(${i})"></div>`
+      ).join('');
+    }
+
+    function stepMove(dir) {
+      stepIndex = (stepIndex + dir + steps.length) % steps.length;
+      renderStep(stepIndex);
+    }
+
+    function goToStep(i) { stepIndex = i; renderStep(i); }
+
     function toggleFaq(btn) {
       const answer = btn.nextElementSibling;
       const isOpen = answer.classList.contains('open');
@@ -910,6 +921,8 @@
         alert('Connection error. Please check your internet and try again.');
       });
     });
+
+    renderStep(0);
   </script>
 
 </body>
