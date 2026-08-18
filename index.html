@@ -215,42 +215,6 @@
       #page-media { padding: 4rem 12%; }
     }
 
-    .faq-list { margin: 2.5rem auto 0; max-width: 720px; text-align: left; }
-    .faq-item { border-bottom: 1px solid var(--grey-mid); }
-    .faq-q {
-      width: 100%;
-      background: none;
-      border: none;
-      color: var(--white);
-      text-align: left;
-      padding: 1.25rem 0;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      transition: color 0.2s;
-    }
-    .faq-q:hover { color: var(--green); }
-    .faq-q .faq-icon {
-      color: var(--green);
-      font-size: 1.2rem;
-      transition: transform 0.2s;
-      flex-shrink: 0;
-    }
-    .faq-q.open .faq-icon { transform: rotate(45deg); }
-    .faq-a {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-    }
-    .faq-a.open { max-height: 300px; padding-bottom: 1.25rem; }
-
     /* CONTACT */
     #contact { background: var(--black); text-align: center; }
     #contact .section-title { margin-bottom: 0.5rem; }
@@ -286,8 +250,6 @@
     /* PAGE SWITCHING */
     .page { display: none; }
     .page.active { display: block; }
-
-    .nav-links a.active { color: var(--green); }
 
     /* ORDER PAGE */
     #page-order { background: var(--black); min-height: 100vh; padding: 4rem 5%; }
@@ -335,12 +297,6 @@
     }
     .pricing-table tr:hover td { background: var(--grey); }
     .pricing-table .price-col { color: var(--white); font-weight: 600; }
-    .pricing-note {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.75rem;
-      font-style: italic;
-    }
 
     /* ORDER FORM */
     .order-form {
@@ -373,37 +329,7 @@
       transition: border-color 0.2s;
     }
     .form-input:focus { outline: none; border-color: var(--green); }
-    .form-input option { background: var(--grey); }
-    textarea.form-input { resize: vertical; min-height: 100px; }
 
-    .card-checkboxes {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-    .card-checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 0.75rem;
-      border-radius: 4px;
-      border: 1px solid var(--grey-mid);
-      cursor: pointer;
-      transition: border-color 0.2s;
-      font-size: 0.8rem;
-    }
-    .card-checkbox-item:hover { border-color: var(--green); }
-    .card-checkbox-item input { accent-color: var(--green); cursor: pointer; }
-    .card-checkbox-item.consequence-cb { background: var(--grey); color: var(--white); }
-    .card-checkbox-item.reward-cb { background: #f5f5f5; color: var(--black); }
-    .card-checkbox-item.reward-cb:hover { border-color: var(--green); }
-
-    .colour-options {
-      display: flex;
-      gap: 1rem;
-      margin-top: 0.5rem;
-    }
     .colour-option {
       display: flex;
       align-items: center;
@@ -413,14 +339,6 @@
       color: var(--text-muted);
     }
     .colour-option input { accent-color: var(--green); }
-
-    .form-validation-msg {
-      font-size: 0.75rem;
-      color: var(--green);
-      margin-top: 0.4rem;
-      display: none;
-    }
-    .form-validation-msg.error { color: #e05555; display: block; }
 
     .btn-submit {
       background: var(--green);
@@ -449,23 +367,6 @@
       margin-top: 1rem;
     }
 
-    /* MEDIA PAGE */
-    .coming-soon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 60vh;
-      text-align: center;
-      gap: 1rem;
-    }
-    .coming-soon-icon { font-size: 4rem; opacity: 0.3; }
-    .coming-soon h2 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 3rem;
-      color: var(--white);
-    }
-    .coming-soon p { color: var(--text-muted); max-width: 400px; }
     /* FOOTER */
     footer {
       background: var(--grey);
@@ -542,72 +443,15 @@
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section id="faq">
-    <p class="section-label">FAQ</p>
-    <h2 class="section-title">Good Questions.</h2>
-    <div class="faq-list">
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          How many cards do I need?
-          <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-a">Match the number of cards to the number of players in your group. Playing with 4 people? Pick 4 cards.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          When does the card effect kick in?
-          <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-a">The card takes effect on the hole after you earn it — not the hole you're on when you get it. Land in water on hole 5, carry Splash Zone into hole 6.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          How long do I keep a card?
-          <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-a">You hold onto a card until another player triggers the same event. Then it passes to them. If no one triggers it again, you carry it to the end of the round.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Can I mix consequence and reward cards?
-          <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-a">Absolutely. Mixing both types in the same game is encouraged. They don't interact with each other — each card is its own standalone effect.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          What if my course doesn't have a bunker or water?
-          <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-a">That's exactly why the cards are interchangeable. Pick the cards relevant to your course. If Bunker Buster doesn't apply, swap it out for something that does.</div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Where do I get extra cards?
-          <span class="faq-icon">+</span>
-        </button>
-        <div class="faq-a">Additional and replacement cards are available to purchase separately. Get in touch via the contact details below and we'll sort you out.</div>
-      </div>
-
-    </div>
-  </section>
-
   <!-- CONTACT -->
   <section id="contact">
     <p class="section-label">Get in Touch</p>
     <h2 class="section-title">We'd Love to Hear From You.</h2>
     <p class="section-body">Have any questions, orders, or just want to share how your round went — reach out.</p>
     <div class="contact-links">
-      <a href="tel:0733195999" class="contact-link">
-        <div class="contact-icon">📞</div>
-        073 319 5999
+      <a href="https://instagram.com/fore.feit" target="_blank" class="contact-link">
+        <div class="contact-icon">📸</div>
+        @fore.feit
       </a>
       <a href="mailto:monrevwpersonal@gmail.com" class="contact-link">
         <div class="contact-icon">✉️</div>
@@ -672,7 +516,7 @@
           <!-- Out of town delivery -->
           <div class="form-group">
             <label class="colour-option" style="display:inline-flex;">
-              <input type="checkbox" name="out_of_town_delivery" value="Yes"> Out of town delivery required
+              <input type="checkbox" name="out_of_town_delivery" value="Yes"> Out of town delivery required (outside Port Elizabeth)
             </label>
           </div>
 
@@ -790,14 +634,6 @@
     }
 
     Object.keys(mediaSets).forEach(renderMedia);
-
-    function toggleFaq(btn) {
-      const answer = btn.nextElementSibling;
-      const isOpen = answer.classList.contains('open');
-      document.querySelectorAll('.faq-a.open').forEach(a => a.classList.remove('open'));
-      document.querySelectorAll('.faq-q.open').forEach(q => q.classList.remove('open'));
-      if (!isOpen) { answer.classList.add('open'); btn.classList.add('open'); }
-    }
 
     function showPage(page) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
