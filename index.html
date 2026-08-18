@@ -293,6 +293,23 @@
     #page-order { background: var(--black); min-height: 100vh; padding: 4rem 5%; }
     #page-media { background: var(--black); min-height: 100vh; padding: 4rem 5%; }
 
+    .media-section { max-width: 640px; margin: 0 auto 4rem; text-align: center; }
+    .media-section:last-child { margin-bottom: 0; }
+    .media-heading { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--green-light); }
+    .media-carousel-wrap { position: relative; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .media-carousel { width: 100%; max-width: 460px; aspect-ratio: 4 / 5; border-radius: 12px; overflow: hidden; background: var(--grey); border: 1px solid var(--grey-mid); position: relative; }
+    .media-carousel img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .media-carousel img.active { display: block; }
+    .media-arrow { background: var(--grey-mid); color: var(--white); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; flex-shrink: 0; transition: background 0.2s; }
+    .media-arrow:hover { background: var(--green); }
+    .media-dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
+    .media-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--grey-mid); cursor: pointer; transition: background 0.2s; }
+    .media-dot.active { background: var(--green-light); }
+    @media (max-width: 600px) {
+      .media-carousel { max-width: 320px; }
+      .media-arrow { width: 34px; height: 34px; }
+    }
+
     /* PRICING TABLE */
     .pricing-table {
       width: 100%;
@@ -737,10 +754,32 @@
 
   <!-- MEDIA PAGE -->
   <div id="page-media" class="page">
-    <div class="coming-soon">
-      <div class="coming-soon-icon">🎬</div>
-      <h2>Coming Soon</h2>
-      <p>Photos, videos, and highlights from FOREFEIT in action. Check back soon!</p>
+    <div class="media-section">
+      <h2 class="media-heading">Carry Cases</h2>
+      <div class="media-carousel-wrap">
+        <button class="media-arrow media-arrow-left" onclick="mediaMove('cases', -1)">&#10094;</button>
+        <div class="media-carousel" id="carousel-cases"></div>
+        <button class="media-arrow media-arrow-right" onclick="mediaMove('cases', 1)">&#10095;</button>
+      </div>
+      <div class="media-dots" id="dots-cases"></div>
+    </div>
+    <div class="media-section">
+      <h2 class="media-heading">Consequence Cards</h2>
+      <div class="media-carousel-wrap">
+        <button class="media-arrow media-arrow-left" onclick="mediaMove('consequence', -1)">&#10094;</button>
+        <div class="media-carousel" id="carousel-consequence"></div>
+        <button class="media-arrow media-arrow-right" onclick="mediaMove('consequence', 1)">&#10095;</button>
+      </div>
+      <div class="media-dots" id="dots-consequence"></div>
+    </div>
+    <div class="media-section">
+      <h2 class="media-heading">Reward Cards</h2>
+      <div class="media-carousel-wrap">
+        <button class="media-arrow media-arrow-left" onclick="mediaMove('reward', -1)">&#10094;</button>
+        <div class="media-carousel" id="carousel-reward"></div>
+        <button class="media-arrow media-arrow-right" onclick="mediaMove('reward', 1)">&#10095;</button>
+      </div>
+      <div class="media-dots" id="dots-reward"></div>
     </div>
   </div><!-- END MEDIA PAGE -->
 
@@ -778,6 +817,44 @@
     }
 
     function goToStep(i) { stepIndex = i; renderStep(i); }
+
+    // MEDIA CAROUSELS
+    const mediaSets = {
+      cases: { images: ['front-profile.JPG', 'side-profile.JPG'], index: 0 },
+      consequence: {
+        images: ['bunker-buster.JPG', 'splash-zone.JPG', 'tree-hugger.JPG', 'bush-whacker.JPG', 'the-houdini.JPG', 'fence-hopper.JPG'],
+        index: 0
+      },
+      reward: {
+        images: ['go-long.JPG', 'eager-eagle.JPG', 'early-bird.JPG', 'par-fection.JPG', 'chip-inski.JPG', 'pin-seeker.JPG'],
+        index: 0
+      }
+    };
+
+    function renderMedia(key) {
+      const set = mediaSets[key];
+      const carousel = document.getElementById('carousel-' + key);
+      const dots = document.getElementById('dots-' + key);
+      carousel.innerHTML = set.images.map((img, i) =>
+        `<img src="images/${img}" alt="${img}" class="${i === set.index ? 'active' : ''}">`
+      ).join('');
+      dots.innerHTML = set.images.map((_, i) =>
+        `<div class="media-dot ${i === set.index ? 'active' : ''}" onclick="mediaGoTo('${key}', ${i})"></div>`
+      ).join('');
+    }
+
+    function mediaMove(key, dir) {
+      const set = mediaSets[key];
+      set.index = (set.index + dir + set.images.length) % set.images.length;
+      renderMedia(key);
+    }
+
+    function mediaGoTo(key, i) {
+      mediaSets[key].index = i;
+      renderMedia(key);
+    }
+
+    Object.keys(mediaSets).forEach(renderMedia);
 
     function toggleFaq(btn) {
       const answer = btn.nextElementSibling;
