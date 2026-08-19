@@ -317,6 +317,20 @@
     /* BUILD PAGE */
     #page-build { background: var(--black); min-height: 100vh; padding: 4rem 5%; }
     #page-build-inner { max-width: 900px; margin: 0 auto; }
+    .build-title-group {
+      max-width: 420px;
+      margin: 2rem auto 0;
+      text-align: left;
+    }
+    .build-title-group label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
     .build-columns {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -335,7 +349,7 @@
       border-bottom: 2px solid var(--grey-mid);
     }
     .consequence-heading { color: var(--white); }
-    .reward-heading { color: var(--green-light); }
+    .reward-heading { color: var(--white); }
 
     .build-card {
       background: var(--grey);
@@ -351,9 +365,10 @@
       align-items: center;
       gap: 0.65rem;
       cursor: pointer;
+      min-width: 0;
     }
     .build-card-header input { accent-color: var(--green); width: 16px; height: 16px; flex-shrink: 0; }
-    .build-card-name { font-weight: 600; font-size: 0.9rem; }
+    .build-card-name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1; }
     .build-card-phrase {
       display: none;
       width: 100%;
@@ -526,7 +541,7 @@
     <p class="hero-eyebrow">The Golf Card Game</p>
     <h1>Forefeit</h1>
     <p class="hero-sub">Play it during your round. Every bad shot — or brilliant one — earns a card. <strong>Carry it into the next hole and face what comes with it.</strong></p>
-    <p class="hero-sub" style="margin-top: 0.75rem; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--green-light);">Now playable at Balls and Birdies, Gqeberha</p>
+    <p class="hero-sub" style="margin-top: 0.75rem; font-size: 1rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green-light); font-weight: 600;">Now playable at Balls and Birdies, Gqeberha</p>
   </section>
 
   <!-- HOW TO PLAY -->
@@ -576,6 +591,11 @@
       <p class="section-label">Build</p>
       <h2 class="section-title">Build Your Deck.</h2>
       <p class="section-body">Pick your cards and write your own consequence or reward for each. Download it as an image to keep with your group.</p>
+
+      <div class="build-title-group">
+        <label for="build-game-title">Game Title <span style="color:var(--green);">*</span></label>
+        <input type="text" id="build-game-title" class="form-input" placeholder="e.g. Saturday Squad" oninput="updateBuildHint()">
+      </div>
 
       <div class="build-columns">
         <div class="build-col">
@@ -911,25 +931,47 @@
 
     function updateBuildPhrase(type, i, value) {
       buildData[type][i].phrase = value;
+      updateBuildHint();
     }
 
     function updateBuildHint() {
-      const total = buildData.consequence.filter(c => c.selected).length + buildData.reward.filter(c => c.selected).length;
-      document.getElementById('build-hint').textContent = total > 0
-        ? `${total} card${total > 1 ? 's' : ''} selected.`
-        : 'Select at least one card to get started.';
+      const title = document.getElementById('build-game-title').value.trim();
+      const selectedCards = [...buildData.consequence, ...buildData.reward].filter(c => c.selected);
+      const total = selectedCards.length;
+      const missingPhrase = selectedCards.some(c => !c.phrase.trim());
+      const hint = document.getElementById('build-hint');
+
+      if (total === 0) {
+        hint.textContent = 'Select at least one card to get started.';
+      } else if (!title) {
+        hint.textContent = `${total} card${total > 1 ? 's' : ''} selected. Add a game title to continue.`;
+      } else if (missingPhrase) {
+        hint.textContent = `${total} card${total > 1 ? 's' : ''} selected. Give every card a phrase to unlock the download.`;
+      } else {
+        hint.textContent = `${total} card${total > 1 ? 's' : ''} ready. You can download your deck!`;
+      }
     }
 
     renderBuildList('consequence');
     renderBuildList('reward');
+    updateBuildHint();
 
     function downloadDeckImage() {
+      const title = document.getElementById('build-game-title').value.trim();
       const selected = [
         ...buildData.consequence.filter(c => c.selected).map(c => ({ ...c, type: 'Consequence' })),
         ...buildData.reward.filter(c => c.selected).map(c => ({ ...c, type: 'Reward' }))
       ];
       if (selected.length === 0) {
         alert('Select at least one card first!');
+        return;
+      }
+      if (!title) {
+        alert('Please add a game title before downloading.');
+        return;
+      }
+      if (selected.some(c => !c.phrase.trim())) {
+        alert('Please give every selected card a consequence/reward phrase before downloading.');
         return;
       }
 
@@ -955,7 +997,7 @@
       ctx.fillText('FOREFEIT', 40, 55);
       ctx.fillStyle = '#ffffff';
       ctx.font = '400 14px Arial';
-      ctx.fillText('My Deck', 40, 80);
+      ctx.fillText(title, 40, 80);
       ctx.strokeStyle = '#2e2e2e';
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -1006,7 +1048,8 @@
       ctx.fillText('forefeit.co.za', 40, height - 25);
 
       const link = document.createElement('a');
-      link.download = 'forefeit-my-deck.png';
+      const safeTitle = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      link.download = `forefeit-${safeTitle || 'my-deck'}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     }
