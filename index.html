@@ -52,22 +52,27 @@
     }
     .nav-logo span { color: var(--green); }
 
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.85rem;
+    .nav-menu-select {
+      background: var(--grey);
+      color: var(--white);
+      border: 1px solid var(--grey-mid);
+      border-radius: 6px;
+      padding: 0.5rem 2.2rem 0.5rem 0.9rem;
+      font-size: 0.8rem;
       font-weight: 500;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      transition: color 0.2s;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 0.7rem center;
+      background-size: 14px;
+      transition: border-color 0.2s;
     }
-    .nav-links a:hover { color: var(--green); }
-    .nav-links a.active { color: var(--green); }
+    .nav-menu-select:hover, .nav-menu-select:focus { border-color: var(--green); outline: none; }
+    .nav-menu-select option { background: var(--grey); color: var(--white); }
 
     /* HERO */
     .hero {
@@ -212,7 +217,7 @@
       nav { padding: 0 12%; }
       footer { padding: 2rem 12%; }
       #page-order { padding: 4rem 12%; }
-      #page-media { padding: 4rem 12%; }
+      #page-products { padding: 4rem 12%; }
     }
 
     /* CONTACT */
@@ -253,7 +258,7 @@
 
     /* ORDER PAGE */
     #page-order { background: var(--black); min-height: 100vh; padding: 4rem 5%; }
-    #page-media { background: var(--black); min-height: 100vh; padding: 4rem 5%; }
+    #page-products { background: var(--black); min-height: 100vh; padding: 4rem 5%; }
 
     .media-section { max-width: 720px; margin: 0 auto 4rem; text-align: center; }
     .media-section:last-child { margin-bottom: 0; }
@@ -267,6 +272,9 @@
     .media-dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
     .media-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--grey-mid); cursor: pointer; transition: background 0.2s; }
     .media-dot.active { background: var(--green-light); }
+    .media-caption { margin-top: 1rem; min-height: 1.5rem; }
+    .media-card-name { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.03em; font-size: 1.3rem; color: var(--white); margin-bottom: 0.35rem; }
+    .media-card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; max-width: 520px; margin: 0 auto; }
     @media (max-width: 600px) {
       .media-carousel { max-width: 320px; }
       .media-arrow { width: 34px; height: 34px; }
@@ -390,8 +398,6 @@
     /* RESPONSIVE */
     @media (max-width: 600px) {
       nav { padding: 0 4%; }
-      .nav-links { gap: 1rem; }
-      .nav-links a { font-size: 0.75rem; }
       section { padding: 3.5rem 4%; }
       .hero { min-height: 80vh; }
 
@@ -403,11 +409,12 @@
   <!-- NAV -->
   <nav>
     <a href="#" class="nav-logo" onclick="showPage('home')">Forefeit</a>
-    <ul class="nav-links">
-      <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
-      <li><a href="#" onclick="showPage('order')" id="nav-order">Order</a></li>
-      <li><a href="#" onclick="showPage('media')" id="nav-media">Media</a></li>
-    </ul>
+    <select class="nav-menu-select" id="nav-menu-select" onchange="showPage(this.value)">
+      <option value="" disabled selected hidden>Menu</option>
+      <option value="home">Home</option>
+      <option value="order">Order</option>
+      <option value="products">Products</option>
+    </select>
   </nav>
 
   <!-- HOME PAGE -->
@@ -467,7 +474,7 @@
     <section id="page-order-inner">
       <p class="section-label">Pricing</p>
       <h2 class="section-title">Pick Your Set.</h2>
-      <p class="section-body">Every set includes one case per 4 cards. Mix and match your cards to suit your course.</p>
+      <p class="section-body">Purchase just consequence cards, just reward cards, or mix and match them as you wish.</p>
 
       <table class="pricing-table">
         <thead>
@@ -531,7 +538,7 @@
   </div><!-- END ORDER PAGE -->
 
   <!-- MEDIA PAGE -->
-  <div id="page-media" class="page">
+  <div id="page-products" class="page">
     <div class="media-section">
       <h2 class="media-heading">Carry Cases</h2>
       <div class="media-carousel-wrap">
@@ -540,6 +547,7 @@
         <button class="media-arrow media-arrow-right" onclick="mediaMove('cases', 1)">&#10095;</button>
       </div>
       <div class="media-dots" id="dots-cases"></div>
+      <div class="media-caption" id="caption-cases"></div>
     </div>
     <div class="media-section">
       <h2 class="media-heading">Consequence Cards</h2>
@@ -549,6 +557,7 @@
         <button class="media-arrow media-arrow-right" onclick="mediaMove('consequence', 1)">&#10095;</button>
       </div>
       <div class="media-dots" id="dots-consequence"></div>
+      <div class="media-caption" id="caption-consequence"></div>
     </div>
     <div class="media-section">
       <h2 class="media-heading">Reward Cards</h2>
@@ -558,6 +567,7 @@
         <button class="media-arrow media-arrow-right" onclick="mediaMove('reward', 1)">&#10095;</button>
       </div>
       <div class="media-dots" id="dots-reward"></div>
+      <div class="media-caption" id="caption-reward"></div>
     </div>
   </div><!-- END MEDIA PAGE -->
 
@@ -572,7 +582,7 @@
     const steps = [
       { num: '01', title: 'Select Your Cards', body: 'Build your deck with cards based on your course and the amount of players in your group.' },
       { num: '02', title: 'Earn a Card', body: 'Each card has a common golf event tied to it — when the event is triggered, you earn the card.' },
-      { num: '03', title: 'Face the Music', body: 'Each card has a consequence or reward tied to it, which must be done on each hole you carry the card into.' },
+      { num: '03', title: 'Face the Music', body: 'Tie a consequence or reward to each card — this consequence or reward has to be done on each hole that you have the card.' },
       { num: '04', title: 'Lose a Card', body: 'To lose a card, another player in your group must trigger the same event to earn it.' },
       { num: '05', title: 'Make It Your Own', body: 'Create your own consequences and rewards to tie to the cards in your deck, and have fun watching the chaos unfold.' }
     ];
@@ -597,15 +607,38 @@
 
     function goToStep(i) { stepIndex = i; renderStep(i); }
 
-    // MEDIA CAROUSELS
+    // PRODUCT CAROUSELS
     const mediaSets = {
-      cases: { images: ['front-profile.png', 'side-profile.png'], index: 0 },
+      cases: {
+        images: ['front-profile.png', 'side-profile.png'],
+        names: ['Front Profile', 'Side Profile'],
+        descriptions: ['', ''],
+        index: 0
+      },
       consequence: {
         images: ['bunker-buster.png', 'splash-zone.png', 'tree-hugger.png', 'bush-whacker.png', 'harry-houdini.png', 'fence-hopper.png'],
+        names: ['Bunker Buster', 'Splash Zone', 'Tree Hugger', 'Bush Whacker', 'The Houdini', 'Fence Hopper'],
+        descriptions: [
+          'This card is earned when a player\'s ball lands in a bunker.',
+          'This card is earned when a player\'s ball lands in a water hazard. Casual water not included.',
+          'This card is earned when a player\'s ball collides with a tree or their shot is obstructed by a tree.',
+          'This card is earned when a player\'s ball lands in a bush or their shot is obstructed by a bush.',
+          'This card is earned when a player saw their ball land but cannot find it.',
+          'This card is earned when a player\'s ball lands out of bounds or in a hazard.'
+        ],
         index: 0
       },
       reward: {
         images: ['go-long.png', 'eager-eagle.png', 'early-bird.png', 'par-fection.png', 'chip-inski.png', 'pin-seeker.png'],
+        names: ['Go Long', 'Eager Eagle', 'Early Bird', 'Par Fection', 'Chip Inski', 'Pin Seeker'],
+        descriptions: [
+          'This card is earned when a player hits the longest drive in the group on a par 4 or par 5.',
+          'This card is earned when a player scores an eagle on any hole.',
+          'This card is earned when a player scores a birdie on any hole.',
+          'This card is earned when a player scores a par on any hole.',
+          'This card is earned when a player holes out with any non-putter shot from off the green.',
+          'This card is earned when a player lands their ball within putter length of the cup from a non-putter shot from off the green.'
+        ],
         index: 0
       }
     };
@@ -614,12 +647,20 @@
       const set = mediaSets[key];
       const carousel = document.getElementById('carousel-' + key);
       const dots = document.getElementById('dots-' + key);
+      const caption = document.getElementById('caption-' + key);
       carousel.innerHTML = set.images.map((img, i) =>
         `<img src="images/${img}" alt="${img}" class="${i === set.index ? 'active' : ''}">`
       ).join('');
       dots.innerHTML = set.images.map((_, i) =>
         `<div class="media-dot ${i === set.index ? 'active' : ''}" onclick="mediaGoTo('${key}', ${i})"></div>`
       ).join('');
+      if (caption) {
+        const name = set.names[set.index];
+        const desc = set.descriptions[set.index];
+        caption.innerHTML = desc
+          ? `<h3 class="media-card-name">${name}</h3><p class="media-card-desc">${desc}</p>`
+          : `<h3 class="media-card-name">${name}</h3>`;
+      }
     }
 
     function mediaMove(key, dir) {
@@ -637,9 +678,8 @@
 
     function showPage(page) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
       document.getElementById('page-' + page).classList.add('active');
-      document.getElementById('nav-' + page).classList.add('active');
+      document.getElementById('nav-menu-select').value = '';
       window.scrollTo(0, 0);
     }
 
