@@ -221,33 +221,6 @@
       #page-products { padding: 4rem 12%; }
     }
 
-    /* MINI DECK VISUAL */
-    .mini-deck {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 1.5rem auto 0;
-      max-width: 420px;
-    }
-    .mini-card {
-      width: 42px;
-      height: 58px;
-      border-radius: 5px;
-      border: 1.5px solid var(--grey-mid);
-      opacity: 0.35;
-      transform: scale(0.92);
-      transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
-    }
-    .mini-card.consequence { background: var(--black); border-color: #444; }
-    .mini-card.reward { background: var(--white); }
-    .mini-card.lit {
-      opacity: 1;
-      transform: scale(1);
-      border-color: var(--green-light);
-      box-shadow: 0 0 10px rgba(78, 158, 90, 0.5);
-    }
-
     /* FAQ */
     .faq-list { max-width: 720px; margin: 2.5rem auto 0; text-align: left; }
     .faq-item { border-bottom: 1px solid var(--grey-mid); }
@@ -340,6 +313,64 @@
       .media-carousel { max-width: 320px; }
       .media-arrow { width: 34px; height: 34px; }
     }
+
+    /* BUILD PAGE */
+    #page-build { background: var(--black); min-height: 100vh; padding: 4rem 5%; }
+    #page-build-inner { max-width: 900px; margin: 0 auto; }
+    .build-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin-top: 2.5rem;
+    }
+    @media (max-width: 700px) {
+      .build-columns { grid-template-columns: 1fr; }
+    }
+    .build-col-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.05em;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--grey-mid);
+    }
+    .consequence-heading { color: var(--white); }
+    .reward-heading { color: var(--green-light); }
+
+    .build-card {
+      background: var(--grey);
+      border: 1px solid var(--grey-mid);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.85rem;
+      transition: border-color 0.2s;
+    }
+    .build-card.selected { border-color: var(--green); }
+    .build-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      cursor: pointer;
+    }
+    .build-card-header input { accent-color: var(--green); width: 16px; height: 16px; flex-shrink: 0; }
+    .build-card-name { font-weight: 600; font-size: 0.9rem; }
+    .build-card-phrase {
+      display: none;
+      width: 100%;
+      margin-top: 0.75rem;
+      padding: 0.6rem 0.8rem;
+      background: var(--black);
+      border: 1px solid var(--grey-mid);
+      border-radius: 4px;
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+    }
+    .build-card-phrase:focus { outline: none; border-color: var(--green); }
+    .build-card.selected .build-card-phrase { display: block; }
+
+    .build-actions { text-align: center; margin-top: 2.5rem; }
+    .build-hint { margin-top: 0.9rem; font-size: 0.8rem; color: var(--text-muted); }
 
     /* PRICING TABLE */
     .pricing-table {
@@ -473,6 +504,7 @@
     <select class="nav-menu-select" id="nav-menu-select" onchange="showPage(this.value)">
       <option value="" disabled selected hidden>Menu</option>
       <option value="home">Home</option>
+      <option value="build">Build</option>
       <option value="order">Order</option>
       <option value="products">Products</option>
     </select>
@@ -537,6 +569,31 @@
   </section>
 
   </div><!-- END HOME PAGE -->
+
+  <!-- BUILD PAGE -->
+  <div id="page-build" class="page">
+    <section id="page-build-inner">
+      <p class="section-label">Build</p>
+      <h2 class="section-title">Build Your Deck.</h2>
+      <p class="section-body">Pick your cards and write your own consequence or reward for each. Download it as an image to keep with your group.</p>
+
+      <div class="build-columns">
+        <div class="build-col">
+          <h3 class="build-col-heading consequence-heading">Consequence Cards</h3>
+          <div id="build-consequence-list"></div>
+        </div>
+        <div class="build-col">
+          <h3 class="build-col-heading reward-heading">Reward Cards</h3>
+          <div id="build-reward-list"></div>
+        </div>
+      </div>
+
+      <div class="build-actions">
+        <button class="btn-submit" onclick="downloadDeckImage()">Download Deck as PNG</button>
+        <p class="build-hint" id="build-hint">Select at least one card to get started.</p>
+      </div>
+    </section>
+  </div><!-- END BUILD PAGE -->
 
   <!-- ORDER PAGE -->
   <div id="page-order" class="page">
@@ -704,43 +761,16 @@
     renderFaq();
 
     let stepIndex = 0;
-    let miniDeckTimer = null;
-
-    function renderMiniDeck() {
-      let html = '<div class="mini-deck" id="mini-deck">';
-      for (let i = 0; i < 6; i++) html += `<div class="mini-card consequence" data-i="${i}"></div>`;
-      for (let i = 0; i < 6; i++) html += `<div class="mini-card reward" data-i="${i + 6}"></div>`;
-      html += '</div>';
-      return html;
-    }
-
-    function animateMiniDeck() {
-      clearInterval(miniDeckTimer);
-      const cards = document.querySelectorAll('#mini-deck .mini-card');
-      cards.forEach(c => c.classList.remove('lit'));
-      let i = 0;
-      miniDeckTimer = setInterval(() => {
-        if (i < cards.length) {
-          cards[i].classList.add('lit');
-          i++;
-        } else {
-          clearInterval(miniDeckTimer);
-        }
-      }, 120);
-    }
 
     function renderStep(index) {
       const s = steps[index];
-      const showDeck = index === 0;
       document.getElementById('step-card').innerHTML = `
         <div class="step-num">${s.num}</div>
         <h3>${s.title}</h3>
-        <p>${s.body}</p>
-        ${showDeck ? renderMiniDeck() : ''}`;
+        <p>${s.body}</p>`;
       document.getElementById('step-dots').innerHTML = steps.map((_, i) =>
         `<div class="step-dot ${i === index ? 'active' : ''}" onclick="goToStep(${i})"></div>`
       ).join('');
-      if (showDeck) animateMiniDeck();
     }
 
     function stepMove(dir) {
@@ -853,6 +883,152 @@
     });
 
     renderStep(0);
+
+    // BUILD PAGE
+    const buildData = {
+      consequence: mediaSets.consequence.names.map(n => ({ name: n, selected: false, phrase: '' })),
+      reward: mediaSets.reward.names.map(n => ({ name: n, selected: false, phrase: '' }))
+    };
+
+    function renderBuildList(type) {
+      const container = document.getElementById('build-' + type + '-list');
+      container.innerHTML = buildData[type].map((c, i) => `
+        <div class="build-card ${c.selected ? 'selected' : ''}" id="build-${type}-${i}">
+          <label class="build-card-header">
+            <input type="checkbox" ${c.selected ? 'checked' : ''} onchange="toggleBuildCard('${type}', ${i})">
+            <span class="build-card-name">${c.name}</span>
+          </label>
+          <input type="text" class="build-card-phrase" placeholder="Describe the ${type === 'consequence' ? 'consequence' : 'reward'}..." value="${c.phrase.replace(/"/g, '&quot;')}" oninput="updateBuildPhrase('${type}', ${i}, this.value)">
+        </div>
+      `).join('');
+    }
+
+    function toggleBuildCard(type, i) {
+      buildData[type][i].selected = !buildData[type][i].selected;
+      renderBuildList(type);
+      updateBuildHint();
+    }
+
+    function updateBuildPhrase(type, i, value) {
+      buildData[type][i].phrase = value;
+    }
+
+    function updateBuildHint() {
+      const total = buildData.consequence.filter(c => c.selected).length + buildData.reward.filter(c => c.selected).length;
+      document.getElementById('build-hint').textContent = total > 0
+        ? `${total} card${total > 1 ? 's' : ''} selected.`
+        : 'Select at least one card to get started.';
+    }
+
+    renderBuildList('consequence');
+    renderBuildList('reward');
+
+    function downloadDeckImage() {
+      const selected = [
+        ...buildData.consequence.filter(c => c.selected).map(c => ({ ...c, type: 'Consequence' })),
+        ...buildData.reward.filter(c => c.selected).map(c => ({ ...c, type: 'Reward' }))
+      ];
+      if (selected.length === 0) {
+        alert('Select at least one card first!');
+        return;
+      }
+
+      const width = 800;
+      const rowHeight = 90;
+      const headerHeight = 130;
+      const footerHeight = 60;
+      const height = headerHeight + selected.length * rowHeight + footerHeight;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+
+      // Background
+      ctx.fillStyle = '#0d0d0d';
+      ctx.fillRect(0, 0, width, height);
+
+      // Header
+      ctx.fillStyle = '#3a7d44';
+      ctx.font = '700 20px Arial';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText('FOREFEIT', 40, 55);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '400 14px Arial';
+      ctx.fillText('My Deck', 40, 80);
+      ctx.strokeStyle = '#2e2e2e';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(40, headerHeight - 20);
+      ctx.lineTo(width - 40, headerHeight - 20);
+      ctx.stroke();
+
+      // Rows
+      selected.forEach((c, i) => {
+        const y = headerHeight + i * rowHeight;
+        const isConsequence = c.type === 'Consequence';
+
+        // card swatch
+        ctx.fillStyle = isConsequence ? '#1c1c1c' : '#ffffff';
+        ctx.strokeStyle = isConsequence ? '#444444' : '#dddddd';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect ? ctx.roundRect(40, y + 12, 44, 60, 5) : ctx.rect(40, y + 12, 44, 60);
+        ctx.fill();
+        ctx.stroke();
+
+        // name + type
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '700 17px Arial';
+        ctx.fillText(c.name, 104, y + 32);
+        ctx.fillStyle = isConsequence ? '#888888' : '#4e9e5a';
+        ctx.font = '600 11px Arial';
+        ctx.fillText(c.type.toUpperCase(), 104, y + 48);
+
+        // phrase (wrap)
+        ctx.fillStyle = '#cccccc';
+        ctx.font = '400 13px Arial';
+        const phrase = c.phrase.trim() || '(no description added)';
+        wrapText(ctx, phrase, 104, y + 68, width - 144, 16);
+
+        if (i < selected.length - 1) {
+          ctx.strokeStyle = '#1c1c1c';
+          ctx.beginPath();
+          ctx.moveTo(40, y + rowHeight - 5);
+          ctx.lineTo(width - 40, y + rowHeight - 5);
+          ctx.stroke();
+        }
+      });
+
+      // Footer
+      ctx.fillStyle = '#666666';
+      ctx.font = '400 11px Arial';
+      ctx.fillText('forefeit.co.za', 40, height - 25);
+
+      const link = document.createElement('a');
+      link.download = 'forefeit-my-deck.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      let lineY = y;
+      let lines = 0;
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        if (ctx.measureText(testLine).width > maxWidth && n > 0 && lines < 1) {
+          ctx.fillText(line, x, lineY);
+          line = words[n] + ' ';
+          lineY += lineHeight;
+          lines++;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, lineY);
+    }
   </script>
 
 </body>
