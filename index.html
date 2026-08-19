@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Forefeit — The Golf Card Game</title>
+  <meta name="description" content="Forefeit is a golf card game played during your round. Trigger real golf events to earn consequence and reward cards, then face what comes with them hole by hole. Now playable at Balls and Birdies, Gqeberha.">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
@@ -220,6 +221,66 @@
       #page-products { padding: 4rem 12%; }
     }
 
+    /* MINI DECK VISUAL */
+    .mini-deck {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.5rem auto 0;
+      max-width: 420px;
+    }
+    .mini-card {
+      width: 42px;
+      height: 58px;
+      border-radius: 5px;
+      border: 1.5px solid var(--grey-mid);
+      opacity: 0.35;
+      transform: scale(0.92);
+      transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
+    }
+    .mini-card.consequence { background: var(--black); border-color: #444; }
+    .mini-card.reward { background: var(--white); }
+    .mini-card.lit {
+      opacity: 1;
+      transform: scale(1);
+      border-color: var(--green-light);
+      box-shadow: 0 0 10px rgba(78, 158, 90, 0.5);
+    }
+
+    /* FAQ */
+    .faq-list { max-width: 720px; margin: 2.5rem auto 0; text-align: left; }
+    .faq-item { border-bottom: 1px solid var(--grey-mid); }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: left;
+      padding: 1.1rem 0;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .faq-question:hover { color: var(--green-light); }
+    .faq-icon { flex-shrink: 0; color: var(--green); transition: transform 0.2s; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      line-height: 1.7;
+    }
+    .faq-answer p { padding-bottom: 1.1rem; }
+    .faq-item.open .faq-answer { max-height: 300px; }
+
     /* CONTACT */
     #contact { background: var(--black); text-align: center; }
     #contact .section-title { margin-bottom: 0.5rem; }
@@ -433,6 +494,7 @@
     <p class="hero-eyebrow">The Golf Card Game</p>
     <h1>Forefeit</h1>
     <p class="hero-sub">Play it during your round. Every bad shot — or brilliant one — earns a card. <strong>Carry it into the next hole and face what comes with it.</strong></p>
+    <p class="hero-sub" style="margin-top: 0.75rem; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--green-light);">Now playable at Balls and Birdies, Gqeberha</p>
   </section>
 
   <!-- HOW TO PLAY -->
@@ -448,6 +510,13 @@
       </div>
       <div class="step-dots" id="step-dots"></div>
     </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <p class="section-label">FAQ</p>
+    <h2 class="section-title">Questions? Answered.</h2>
+    <div class="faq-list" id="faq-list"></div>
   </section>
 
   <!-- CONTACT -->
@@ -520,6 +589,24 @@
             <input type="tel" name="phone" class="form-input" required placeholder="0XX XXX XXXX">
           </div>
 
+          <!-- What they're ordering -->
+          <div class="form-group">
+            <label>What Are You Ordering? <span>*</span></label>
+            <select name="set_type" class="form-input" required>
+              <option value="" disabled selected hidden>Select a set</option>
+              <option value="Starter Set (4 cards, 1 case) - R200">Starter Set (4 cards, 1 case) — R200</option>
+              <option value="Mid Set (8 cards, 2 cases) - R300">Mid Set (8 cards, 2 cases) — R300</option>
+              <option value="Full Set (12 cards, 3 cases) - R400">Full Set (12 cards, 3 cases) — R400</option>
+              <option value="Custom / Additional Cards or Cases">Custom / Additional Cards or Cases</option>
+            </select>
+          </div>
+
+          <!-- Notes -->
+          <div class="form-group">
+            <label>Notes <span style="color:var(--text-muted); text-transform:none; letter-spacing:0;">(optional — which cards, quantities, etc.)</span></label>
+            <textarea name="notes" class="form-input" rows="3" placeholder="e.g. Full set, black case"></textarea>
+          </div>
+
           <!-- Out of town delivery -->
           <div class="form-group">
             <label class="colour-option" style="display:inline-flex;">
@@ -587,17 +674,73 @@
       { num: '05', title: 'Make It Your Own', body: 'Create your own consequences and rewards to tie to the cards in your deck, and have fun watching the chaos unfold.' }
     ];
 
+    // FAQ
+    const faqs = [
+      { q: 'How many players can play?', a: 'Forefeit works with any group size. We suggest matching your number of cards to the number of players, but that\'s just a guideline — play with more or fewer if you like.' },
+      { q: 'What if my course doesn\'t have a bunker or water hazard?', a: 'No problem — that\'s exactly why we sell cards individually and in custom sets. Just pick cards that fit the course you\'re playing.' },
+      { q: 'Do I have to use the suggested consequences and rewards?', a: 'Not at all. The suggestions are a starting point — many groups make up their own house rules and consequences for each card.' },
+      { q: 'How do I lose a card?', a: 'Another player in your group has to trigger the same event to take the card off you. Whoever holds the card faces the consequence or earns the reward on that hole.' },
+      { q: 'Can I buy individual cards or cases?', a: 'Yes. You can buy a Starter, Mid, or Full set, or add individual cards and cases on top — see our pricing on the Order page.' },
+      { q: 'Where can I try it before I buy?', a: 'Come play a round at Balls and Birdies in Gqeberha, where Forefeit is available on the simulators.' }
+    ];
+
+    function renderFaq() {
+      const list = document.getElementById('faq-list');
+      list.innerHTML = faqs.map((f, i) => `
+        <div class="faq-item" id="faq-item-${i}">
+          <button class="faq-question" onclick="toggleFaq(${i})">
+            ${f.q}
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer"><p>${f.a}</p></div>
+        </div>
+      `).join('');
+    }
+
+    function toggleFaq(i) {
+      document.getElementById('faq-item-' + i).classList.toggle('open');
+    }
+
+    renderFaq();
+
     let stepIndex = 0;
+    let miniDeckTimer = null;
+
+    function renderMiniDeck() {
+      let html = '<div class="mini-deck" id="mini-deck">';
+      for (let i = 0; i < 6; i++) html += `<div class="mini-card consequence" data-i="${i}"></div>`;
+      for (let i = 0; i < 6; i++) html += `<div class="mini-card reward" data-i="${i + 6}"></div>`;
+      html += '</div>';
+      return html;
+    }
+
+    function animateMiniDeck() {
+      clearInterval(miniDeckTimer);
+      const cards = document.querySelectorAll('#mini-deck .mini-card');
+      cards.forEach(c => c.classList.remove('lit'));
+      let i = 0;
+      miniDeckTimer = setInterval(() => {
+        if (i < cards.length) {
+          cards[i].classList.add('lit');
+          i++;
+        } else {
+          clearInterval(miniDeckTimer);
+        }
+      }, 120);
+    }
 
     function renderStep(index) {
       const s = steps[index];
+      const showDeck = index === 0;
       document.getElementById('step-card').innerHTML = `
         <div class="step-num">${s.num}</div>
         <h3>${s.title}</h3>
-        <p>${s.body}</p>`;
+        <p>${s.body}</p>
+        ${showDeck ? renderMiniDeck() : ''}`;
       document.getElementById('step-dots').innerHTML = steps.map((_, i) =>
         `<div class="step-dot ${i === index ? 'active' : ''}" onclick="goToStep(${i})"></div>`
       ).join('');
+      if (showDeck) animateMiniDeck();
     }
 
     function stepMove(dir) {
